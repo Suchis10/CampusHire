@@ -1,0 +1,18 @@
+{
+  "name": "campushire",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Suchismita",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "connect-mongo": "^6.0.0",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "mongoose": "^9.3.2"
+  }
+}
