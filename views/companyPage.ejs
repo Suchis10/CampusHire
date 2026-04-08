@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= company.name %> Questions – CampusHire</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{ margin:0; padding:0; box-sizing:border-box; font-family:'Sora', sans-serif; }
+body{ background:#f1f5f9; }
+
+/* ── NAVBAR ── */
+.header{
+  position:sticky; top:0; width:100%;
+  background:#fff; display:flex;
+  justify-content:space-between; align-items:center;
+  padding:0 40px; height:64px;
+  box-shadow:0 1px 8px rgba(0,0,0,0.06);
+  z-index:1000; border-bottom:1px solid #e2e8f0;
+}
+.logo{ font-size:20px; font-weight:700; color:#0f172a; letter-spacing:-0.5px; }
+.logo span{ color:#2563eb; }
+.nav{ display:flex; align-items:center; gap:6px; }
+.nav a{
+  text-decoration:none; color:#64748b;
+  font-size:14px; font-weight:600;
+  padding:7px 14px; border-radius:8px; transition:all 0.2s;
+}
+.nav a:hover{ background:#f1f5f9; color:#0f172a; }
+.nav a.active-link{ color:#2563eb; background:#eff6ff; }
+.back-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  background:#f1f5f9; color:#0f172a; border:none;
+  padding:8px 16px; border-radius:8px; font-size:14px;
+  font-weight:600; font-family:'Sora',sans-serif;
+  cursor:pointer; transition:all 0.2s; text-decoration:none;
+}
+.back-btn:hover{ background:#e2e8f0; }
+
+/* ── HERO ── */
+.company-hero{
+  background:linear-gradient(135deg,#0f172a,#1e2a5a,#3b3fbf);
+  padding:44px 60px; position:relative; overflow:hidden;
+}
+.company-hero::before{
+  content:''; position:absolute;
+  width:400px; height:400px; background:rgba(99,102,241,0.12);
+  border-radius:50%; top:-150px; right:-80px;
+}
+.hero-inner{ display:flex; align-items:center; gap:24px; position:relative; z-index:1; }
+.hero-logo{
+  width:72px; height:72px; border-radius:16px;
+  background:#fff; padding:8px; object-fit:contain;
+  box-shadow:0 4px 16px rgba(0,0,0,0.2);
+}
+.hero-logo-placeholder{
+  width:72px; height:72px; border-radius:16px;
+  background:linear-gradient(135deg,#ede9fe,#ddd6fe);
+  display:flex; align-items:center; justify-content:center; font-size:32px;
+  flex-shrink:0;
+}
+.hero-info h1{
+  font-size:32px; font-weight:700; color:#fff; letter-spacing:-0.5px;
+  text-transform:capitalize;
+}
+.hero-info p{ color:#c7d2fe; font-size:14px; margin-top:6px; }
+.hero-chips{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+.hero-chip{
+  background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px; padding:4px 14px; font-size:12px;
+  color:rgba(255,255,255,0.9); font-weight:600;
+}
+
+/* ── FILTERS + SEARCH ── */
+.controls{
+  width:90%; margin:28px auto 0;
+  display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+}
+.q-search{
+  flex:1; min-width:200px; position:relative;
+}
+.q-search input{
+  width:100%; padding:11px 16px 11px 40px;
+  border-radius:10px; border:1.5px solid #e2e8f0;
+  font-size:13px; font-family:'Sora',sans-serif; outline:none;
+  background:#fff; transition:border 0.2s;
+}
+.q-search input:focus{ border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+.q-search-icon{
+  position:absolute; left:12px; top:50%;
+  transform:translateY(-50%); font-size:14px; color:#94a3b8;
+}
+.filter-pill{
+  padding:8px 16px; border-radius:50px; border:1.5px solid #e2e8f0;
+  cursor:pointer; background:#fff; color:#64748b;
+  font-size:13px; font-weight:600; font-family:'Sora',sans-serif; transition:all 0.2s;
+  white-space:nowrap;
+}
+.filter-pill:hover{ border-color:#2563eb; color:#2563eb; }
+.filter-pill.active{
+  background:#2563eb; color:#fff; border-color:#2563eb;
+  box-shadow:0 2px 8px rgba(37,99,235,0.3);
+}
+
+/* ── RESULTS INFO ── */
+.q-results-info{
+  width:90%; margin:14px auto 6px;
+  font-size:13px; color:#64748b; font-weight:600;
+}
+
+/* ── QUESTIONS GRID ── */
+.questions-container{ width:90%; margin:0 auto 80px; }
+.questions-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(320px,1fr));
+  gap:18px;
+}
+
+/* ── QUESTION CARD ── */
+.qcard{
+  background:#fff; border-radius:16px; padding:22px 24px;
+  border:1.5px solid #e2e8f0; transition:all 0.22s;
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column; gap:12px;
+}
+.qcard::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg,#2563eb,#4f46e5); opacity:0; transition:opacity 0.2s;
+}
+.qcard:hover{
+  border-color:#bfdbfe; transform:translateY(-4px);
+  box-shadow:0 12px 28px rgba(37,99,235,0.1);
+}
+.qcard:hover::before{ opacity:1; }
+
+/* top row */
+.qcard-top{ display:flex; justify-content:space-between; align-items:center; }
+.qcard-round{
+  font-size:11px; font-weight:700; color:#64748b;
+  background:#f1f5f9; padding:3px 10px; border-radius:20px;
+}
+.diff-badge{ font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; }
+.diff-Easy  { background:#dcfce7; color:#166534; }
+.diff-Medium{ background:#fef3c7; color:#92400e; }
+.diff-Hard  { background:#fee2e2; color:#991b1b; }
+
+/* question text */
+.qcard-text{
+  font-size:15px; color:#0f172a; font-weight:600; line-height:1.65;
+}
+
+/* category chip */
+.qcard-category{
+  display:inline-flex; align-items:center; gap:5px;
+  background:#f1f5f9; border-radius:20px;
+  padding:3px 10px; font-size:11px; color:#64748b; font-weight:600;
+  width:fit-content;
+}
+
+/* approach */
+.qcard-approach{
+  background:#f8fafc; border-left:3px solid #2563eb;
+  border-radius:0 8px 8px 0; padding:10px 14px;
+}
+.approach-label{
+  font-size:10px; font-weight:700; color:#2563eb;
+  text-transform:uppercase; letter-spacing:.6px; margin-bottom:5px;
+  display:flex; align-items:center; gap:4px;
+}
+.approach-text{ font-size:13px; color:#475569; line-height:1.55; }
+
+/* footer */
+.qcard-footer{
+  display:flex; justify-content:space-between; align-items:center;
+  border-top:1px solid #f1f5f9; padding-top:12px; margin-top:auto;
+}
+.lc-btn{
+  display:inline-flex; align-items:center; gap:5px;
+  background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe;
+  border-radius:7px; padding:4px 12px;
+  font-size:12px; font-weight:700; text-decoration:none; transition:all 0.15s;
+}
+.lc-btn:hover{ background:#2563eb; color:#fff; border-color:#2563eb; }
+.contributor{
+  display:flex; align-items:center; gap:7px;
+}
+.contributor-avatar{
+  width:28px; height:28px; border-radius:50%;
+  background:linear-gradient(135deg,#2563eb,#4f46e5);
+  color:#fff; font-size:12px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.contributor-info{ display:flex; flex-direction:column; }
+.contributor-name{ font-size:12px; font-weight:700; color:#334155; }
+.contributor-role{ font-size:10px; color:#94a3b8; font-weight:500; }
+
+/* ── EMPTY STATE ── */
+.empty-q{
+  text-align:center; padding:70px 20px; color:#94a3b8;
+  background:#fff; border-radius:16px; border:1.5px dashed #e2e8f0;
+}
+.empty-q .emoji{ font-size:48px; margin-bottom:14px; }
+.empty-q h3{ font-size:17px; font-weight:700; color:#64748b; margin-bottom:6px; }
+.empty-q p{ font-size:14px; }
+
+/* ── STATS BAR ── */
+.stats-bar{
+  width:90%; margin:20px auto 24px;
+  display:flex; gap:12px; flex-wrap:wrap;
+}
+.stat-pill{
+  background:#fff; border:1px solid #e2e8f0;
+  border-radius:10px; padding:10px 18px;
+  display:flex; flex-direction:column; gap:2px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.04);
+}
+.stat-pill-label{ font-size:11px; color:#94a3b8; font-weight:600; text-transform:uppercase; letter-spacing:.4px; }
+.stat-pill-value{ font-size:18px; font-weight:700; color:#0f172a; }
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="header">
+  <div class="logo">🎓 Campus<span>Hire</span></div>
+  <div class="nav">
+    <a href="/prepare">← All Companies</a>
+    <a href="/question-bank">Question Bank</a>
+    <a href="/analytics">Analytics</a>
+    <% if (typeof userRole !== 'undefined' && userRole === 'alumni') { %>
+      <a href="/alumni/dashboard" class="active-link">🏆 My Dashboard</a>
+    <% } else { %>
+      <a href="/dashboard" class="active-link">📊 My Dashboard</a>
+    <% } %>
+  </div>
+</div>
+
+<!-- COMPANY HERO -->
+<div class="company-hero">
+  <div class="hero-inner">
+    <% if (company.logo) { %>
+      <img src="<%= company.logo %>" class="hero-logo" onerror="this.style.display='none'">
+    <% } else { %>
+      <div class="hero-logo-placeholder">🏢</div>
+    <% } %>
+    <div class="hero-info">
+      <h1><%= company.name %></h1>
+      <p>Interview questions contributed by alumni who cracked this company.</p>
+      <div class="hero-chips">
+        <% if (company.type) { %><span class="hero-chip"><%= company.type %></span><% } %>
+        <% if (company.package) { %><span class="hero-chip">💰 <%= company.package %> LPA</span><% } %>
+        <% if (company.hireRate) { %><span class="hero-chip">📈 <%= company.hireRate %>% hire rate</span><% } %>
+        <span class="hero-chip">📋 <%= questions.length %> questions</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<% if (questions.length > 0) {
+  const easy   = questions.filter(q => q.difficulty === 'Easy').length;
+  const medium = questions.filter(q => q.difficulty === 'Medium').length;
+  const hard   = questions.filter(q => q.difficulty === 'Hard').length;
+%>
+<div class="stats-bar">
+  <div class="stat-pill">
+    <span class="stat-pill-label">Total</span>
+    <span class="stat-pill-value"><%= questions.length %></span>
+  </div>
+  <div class="stat-pill">
+    <span class="stat-pill-label">🟢 Easy</span>
+    <span class="stat-pill-value" style="color:#166534"><%= easy %></span>
+  </div>
+  <div class="stat-pill">
+    <span class="stat-pill-label">🟡 Medium</span>
+    <span class="stat-pill-value" style="color:#92400e"><%= medium %></span>
+  </div>
+  <div class="stat-pill">
+    <span class="stat-pill-label">🔴 Hard</span>
+    <span class="stat-pill-value" style="color:#991b1b"><%= hard %></span>
+  </div>
+</div>
+<% } %>
+
+<!-- SEARCH + FILTERS -->
+<div class="controls">
+  <div class="q-search">
+    <span class="q-search-icon">🔍</span>
+    <input type="text" id="qSearch" placeholder="Search questions..." onkeyup="filterQuestions()">
+  </div>
+  <button class="filter-pill active" onclick="setFilter('all', this)">All</button>
+  <button class="filter-pill" onclick="setFilter('Easy', this)">🟢 Easy</button>
+  <button class="filter-pill" onclick="setFilter('Medium', this)">🟡 Medium</button>
+  <button class="filter-pill" onclick="setFilter('Hard', this)">🔴 Hard</button>
+  <button class="filter-pill" onclick="setFilter('DSA', this)">DSA</button>
+  <button class="filter-pill" onclick="setFilter('HR', this)">HR</button>
+  <button class="filter-pill" onclick="setFilter('Core CS', this)">Core CS</button>
+</div>
+
+<!-- RESULTS INFO -->
+<div class="q-results-info" id="qResultsInfo"></div>
+
+<!-- QUESTIONS GRID -->
+<div class="questions-container">
+  <% if (questions.length === 0) { %>
+  <div class="empty-q">
+    <div class="emoji">📭</div>
+    <h3>No questions yet for <%= company.name %></h3>
+    <p>Alumni who interviewed here can add questions from their dashboard.</p>
+  </div>
+  <% } else { %>
+  <div class="questions-grid" id="questionsGrid">
+    <% questions.forEach((q, i) => { %>
+    <div class="qcard"
+         data-difficulty="<%= q.difficulty || 'Medium' %>"
+         data-category="<%= q.category || '' %>"
+         data-text="<%= q.questionText.toLowerCase() %>">
+
+      <!-- Top: round + difficulty -->
+      <div class="qcard-top">
+        <span class="qcard-round"><%= q.round || 'General' %></span>
+        <span class="diff-badge diff-<%= q.difficulty || 'Medium' %>"><%= q.difficulty || 'Medium' %></span>
+      </div>
+
+      <!-- Question -->
+      <p class="qcard-text"><%= q.questionText %></p>
+
+      <!-- Category -->
+      <div class="qcard-category">📂 <%= q.category || 'General' %></div>
+
+      <!-- Approach -->
+      <% if (q.approach && q.approach.trim() !== '') { %>
+      <div class="qcard-approach">
+        <div class="approach-label">💡 Approach</div>
+        <div class="approach-text"><%= q.approach %></div>
+      </div>
+      <% } %>
+
+      <!-- Footer: leetcode + contributor -->
+      <div class="qcard-footer">
+        <% if (q.leetcode && q.leetcode.trim() !== '') { %>
+          <a href="<%= q.leetcode %>" target="_blank" class="lc-btn">🔗 LeetCode</a>
+        <% } else { %>
+          <span></span>
+        <% } %>
+
+        <% if (q.addedBy && q.addedBy.name) { %>
+        <div class="contributor"
+             title="<%= q.addedBy.jobRole || '' %><%= q.addedBy.company ? ' at ' + q.addedBy.company : '' %>">
+          <div class="contributor-avatar"><%= q.addedBy.name.charAt(0).toUpperCase() %></div>
+          <div class="contributor-info">
+            <span class="contributor-name"><%= q.addedBy.name.split(' ')[0] %></span>
+            <% if (q.addedBy.company) { %>
+            <span class="contributor-role"><%= q.addedBy.company %></span>
+            <% } %>
+          </div>
+        </div>
+        <% } %>
+      </div>
+
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+</div>
+
+<script>
+  let currentFilter = 'all';
+
+  function setFilter(val, btn){
+    currentFilter = val;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterQuestions();
+  }
+
+  function filterQuestions(){
+    const search = document.getElementById('qSearch').value.toLowerCase();
+    const cards  = document.querySelectorAll('.qcard');
+    let visible  = 0;
+
+    cards.forEach(card => {
+      const diffMatch = currentFilter === 'all'
+        || card.dataset.difficulty === currentFilter
+        || card.dataset.category   === currentFilter;
+      const textMatch = card.dataset.text.includes(search);
+      const show = diffMatch && textMatch;
+      card.style.display = show ? 'flex' : 'none';
+      if(show) visible++;
+    });
+
+    document.getElementById('qResultsInfo').textContent =
+      visible + ' question' + (visible !== 1 ? 's' : '') + ' found';
+  }
+
+  // init count
+  window.onload = function(){
+    const total = document.querySelectorAll('.qcard').length;
+    document.getElementById('qResultsInfo').textContent =
+      total + ' question' + (total !== 1 ? 's' : '') + ' found';
+  };
+</script>
+
+</body>
+</html>

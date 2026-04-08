@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prepare - CampusHire</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{ margin:0; padding:0; box-sizing:border-box; font-family:'Sora', sans-serif; }
+body{ background:#f1f5f9; }
+
+/* ── NAVBAR ── */
+.header{
+  position:sticky; top:0; width:100%;
+  background:#fff; display:flex;
+  justify-content:space-between; align-items:center;
+  padding:0 40px; height:64px;
+  box-shadow:0 1px 8px rgba(0,0,0,0.06);
+  z-index:1000; border-bottom:1px solid #e2e8f0;
+}
+.logo{ font-size:20px; font-weight:700; color:#0f172a; letter-spacing:-0.5px; }
+.logo span{ color:#2563eb; }
+.nav{ display:flex; align-items:center; gap:6px; }
+.nav a{
+  text-decoration:none; color:#64748b;
+  font-size:14px; font-weight:600;
+  padding:7px 14px; border-radius:8px; transition:all 0.2s;
+}
+.nav a:hover{ background:#f1f5f9; color:#0f172a; }
+.nav a.dashboard-link{ color:#2563eb; background:#eff6ff; }
+.nav a.dashboard-link:hover{ background:#dbeafe; }
+.start-btn{
+  background:linear-gradient(135deg,#2563eb,#4f46e5);
+  color:#fff; padding:9px 20px; border:none;
+  border-radius:9px; cursor:pointer; font-size:14px;
+  font-weight:600; font-family:'Sora',sans-serif; transition:opacity 0.2s;
+}
+.start-btn:hover{ opacity:0.9; }
+
+/* ── PAGE HERO ── */
+.page-hero{
+  background:linear-gradient(135deg,#0f172a,#1e2a5a,#3b3fbf);
+  color:white; padding:50px 60px; position:relative; overflow:hidden;
+}
+.page-hero::before{
+  content:''; position:absolute;
+  width:500px; height:500px; background:rgba(99,102,241,0.12);
+  border-radius:50%; top:-200px; right:-100px;
+}
+.page-hero h1{ font-size:36px; margin-bottom:10px; position:relative; z-index:1; }
+.page-hero h1 span{ color:#60a5fa; }
+.page-hero p{ color:#c7d2fe; font-size:15px; position:relative; z-index:1; }
+
+/* ── SEARCH ── */
+.search-container{ width:90%; margin:30px auto 0; }
+.search-wrap{ position:relative; }
+.search-icon{
+  position:absolute; left:16px; top:50%;
+  transform:translateY(-50%); font-size:16px; color:#94a3b8;
+}
+.search-box{
+  width:100%; padding:14px 18px 14px 44px;
+  border-radius:12px; border:1.5px solid #e2e8f0;
+  font-size:14px; font-family:'Sora',sans-serif; outline:none;
+  background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.04); transition:border 0.2s;
+}
+.search-box:focus{ border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+
+/* ── FILTER BAR ── */
+.filter-bar{ margin:16px auto; width:90%; display:flex; gap:10px; flex-wrap:wrap; }
+.filter-btn{
+  padding:8px 18px; border-radius:50px; border:1.5px solid #e2e8f0;
+  cursor:pointer; background:#fff; color:#64748b;
+  font-size:13px; font-weight:600; font-family:'Sora',sans-serif; transition:all 0.2s;
+}
+.filter-btn:hover{ border-color:#2563eb; color:#2563eb; }
+.filter-btn.active{
+  background:#2563eb; color:#fff; border-color:#2563eb;
+  box-shadow:0 2px 8px rgba(37,99,235,0.3);
+}
+
+/* ── RESULTS COUNT ── */
+.results-info{ width:90%; margin:0 auto 16px; font-size:13px; color:#64748b; font-weight:600; }
+
+/* ── GRID ── */
+.container{ width:90%; margin:0 auto 80px; }
+.grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:20px; }
+
+/* ── COMPANY CARD ── */
+.card{
+  background:#fff; border-radius:18px; padding:24px;
+  border:1.5px solid #e2e8f0; transition:all 0.25s;
+  cursor:pointer; position:relative; overflow:hidden;
+}
+.card::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg,#2563eb,#4f46e5); opacity:0; transition:opacity 0.2s;
+}
+.card:hover{ transform:translateY(-6px); box-shadow:0 16px 32px rgba(0,0,0,0.1); border-color:#bfdbfe; }
+.card:hover::before{ opacity:1; }
+.top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.top-left{ display:flex; align-items:center; gap:12px; }
+.logo-img{
+  width:46px; height:46px; object-fit:contain;
+  border-radius:10px; border:1px solid #f1f5f9; padding:4px; background:#fff;
+}
+.company-icon{
+  width:46px; height:46px; border-radius:10px;
+  background:linear-gradient(135deg,#ede9fe,#ddd6fe);
+  display:flex; align-items:center; justify-content:center; font-size:22px;
+}
+.company-name{ font-size:16px; font-weight:700; color:#0f172a; }
+.badge{ padding:4px 12px; border-radius:50px; font-size:11px; font-weight:700; }
+.product{ background:#dcfce7; color:#166534; }
+.service{ background:#e0f2fe; color:#075985; }
+.bank{ background:#fef3c7; color:#92400e; }
+.alumni-badge{ background:#ede9fe; color:#6d28d9; }
+.card-divider{ height:1px; background:#f1f5f9; margin:14px 0; }
+.meta{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.meta-item{ background:#f8fafc; border-radius:10px; padding:10px 12px; }
+.meta-item .meta-label{ font-size:11px; color:#94a3b8; margin-bottom:3px; }
+.meta-item .meta-value{ font-size:15px; font-weight:700; color:#0f172a; }
+.bottom{ display:flex; justify-content:space-between; font-size:12px; color:#64748b; font-weight:600; }
+.bottom span{ display:flex; align-items:center; gap:4px; }
+.prepare-btn{
+  margin-top:16px; width:100%; padding:10px;
+  background:#eff6ff; color:#2563eb; border:1.5px solid #bfdbfe;
+  border-radius:10px; font-size:13px; font-weight:700;
+  font-family:'Sora',sans-serif; cursor:pointer; transition:all 0.2s;
+}
+.prepare-btn:hover{ background:#2563eb; color:#fff; border-color:#2563eb; }
+.alumni-prepare-btn{
+  margin-top:16px; width:100%; padding:10px;
+  background:#f5f3ff; color:#6d28d9; border:1.5px solid #ddd6fe;
+  border-radius:10px; font-size:13px; font-weight:700;
+  font-family:'Sora',sans-serif; cursor:pointer; transition:all 0.2s;
+}
+.alumni-prepare-btn:hover{ background:#6d28d9; color:#fff; border-color:#6d28d9; }
+
+/* ── EMPTY STATE ── */
+.empty-state{ text-align:center; padding:60px 20px; color:#94a3b8; display:none; }
+.empty-state .emoji{ font-size:48px; margin-bottom:16px; }
+.empty-state p{ font-size:15px; }
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="header">
+  <div class="logo">🎓 Campus<span>Hire</span></div>
+  <div class="nav">
+    <a href="/main">Home</a>
+    <a href="/prepare">Companies</a>
+    <a href="/question-bank">Question Bank</a>
+    <a href="/analytics">Analytics</a>
+    <% if (typeof userRole !== 'undefined' && userRole === 'alumni') { %>
+      <a href="/alumni/dashboard" class="dashboard-link">🏆 My Dashboard</a>
+    <% } else { %>
+      <a href="/dashboard" class="dashboard-link">📊 My Dashboard</a>
+    <% } %>
+    <a href="/prepare"><button class="start-btn">Start Preparing →</button></a>
+  </div>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <h1>Explore <span>Companies</span></h1>
+  <p>Browse company-specific question banks, hiring rates, and placement insights.</p>
+</div>
+
+<!-- SEARCH -->
+<div class="search-container" style="margin-top:30px;">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-box" id="searchInput"
+      placeholder="Search companies like Google, Amazon..."
+      onkeyup="searchCompany()">
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterCompanies('all', event)">🌐 All</button>
+  <button class="filter-btn" onclick="filterCompanies('tech', event)">💻 Technology</button>
+  <button class="filter-btn" onclick="filterCompanies('it', event)">🖥 IT Services</button>
+  <button class="filter-btn" onclick="filterCompanies('finance', event)">💰 Finance</button>
+  <button class="filter-btn" onclick="filterCompanies('consulting', event)">📋 Consulting</button>
+  <button class="filter-btn" onclick="filterCompanies('alumni', event)">🎓 Alumni Added</button>
+</div>
+
+<!-- RESULTS INFO -->
+<div class="results-info" id="resultsInfo"></div>
+
+<!-- COMPANIES GRID -->
+<div class="container">
+  <div class="grid" id="grid">
+
+    <!-- ── HARDCODED COMPANY CARDS ── -->
+    <% companies.forEach(c => { %>
+      <div class="card"
+           data-category="<%= c.category %>"
+           data-name="<%= c.name.toLowerCase() %>">
+
+        <div class="top">
+          <div class="top-left">
+            <img src="<%= c.logo %>" class="logo-img" onerror="this.style.display='none'">
+            <div class="company-name"><%= c.name %></div>
+          </div>
+          <span class="badge <%= c.type === 'Product' ? 'product' : c.type === 'Bank' ? 'bank' : 'service' %>">
+            <%= c.type %>
+          </span>
+        </div>
+
+        <div class="card-divider"></div>
+
+        <div class="meta">
+          <div class="meta-item">
+            <div class="meta-label">Questions</div>
+            <div class="meta-value"><%= c.questions %> 📋</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Package</div>
+            <div class="meta-value"><%= c.package %> LPA</div>
+          </div>
+        </div>
+
+        <div class="bottom">
+          <span>👁 <%= c.views %> views</span>
+          <span>📈 <%= c.hireRate %>% hire rate</span>
+        </div>
+
+        <button class="prepare-btn" onclick="goToCompany('<%= c.name %>')">
+          Prepare for <%= c.name %> →
+        </button>
+
+      </div>
+    <% }) %>
+
+    <!-- ── ALUMNI-ADDED NEW COMPANY CARDS ── -->
+    <%
+      if (typeof questions !== 'undefined' && questions.length > 0) {
+        const hardcodedNames = companies.map(c => c.name.toLowerCase());
+        const seenAlumni     = new Set();
+
+        questions.forEach(q => {
+          const cLower = q.company.toLowerCase().trim();
+          if (!hardcodedNames.includes(cLower) && !seenAlumni.has(cLower)) {
+            seenAlumni.add(cLower);
+            const count = questions.filter(x => x.company.toLowerCase().trim() === cLower).length;
+    %>
+        <div class="card"
+             data-category="alumni"
+             data-name="<%= q.company.toLowerCase().trim() %>">
+
+          <div class="top">
+            <div class="top-left">
+              <div class="company-icon">🏢</div>
+              <div class="company-name" style="text-transform:capitalize"><%= q.company %></div>
+            </div>
+            <span class="badge alumni-badge">Alumni</span>
+          </div>
+
+          <div class="card-divider"></div>
+
+          <div class="meta">
+            <div class="meta-item">
+              <div class="meta-label">Questions</div>
+              <div class="meta-value"><%= count %> 📋</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">Source</div>
+              <div class="meta-value" style="font-size:13px">Alumni 🎓</div>
+            </div>
+          </div>
+
+          <div class="bottom">
+            <span>✍️ Community contributed</span>
+          </div>
+
+          <button class="alumni-prepare-btn" onclick="goToCompany('<%= q.company %>')">
+            View Questions for <%= q.company %> →
+          </button>
+
+        </div>
+    <%
+          }
+        });
+      }
+    %>
+
+  </div>
+
+  <div class="empty-state" id="emptyState">
+    <div class="emoji">🔎</div>
+    <p>No companies found. Try a different search.</p>
+  </div>
+</div>
+
+<script>
+function goToCompany(name){
+  window.location.href = "/company/" + encodeURIComponent(name);
+}
+
+function filterCompanies(category, event){
+  const cards   = document.querySelectorAll('.card');
+  const buttons = document.querySelectorAll('.filter-btn');
+  buttons.forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  let visible = 0;
+  cards.forEach(card => {
+    const show = category === 'all' || card.dataset.category === category;
+    card.style.display = show ? 'block' : 'none';
+    if(show) visible++;
+  });
+  updateCount(visible);
+}
+
+function searchCompany(){
+  const input = document.getElementById('searchInput').value.toLowerCase();
+  const cards = document.querySelectorAll('.card');
+  let visible = 0;
+  cards.forEach(card => {
+    const show = card.dataset.name.includes(input);
+    card.style.display = show ? 'block' : 'none';
+    if(show) visible++;
+  });
+  updateCount(visible);
+}
+
+function updateCount(n){
+  document.getElementById('resultsInfo').textContent = n + ' companies found';
+  document.getElementById('emptyState').style.display = n === 0 ? 'block' : 'none';
+}
+
+window.onload = function(){
+  updateCount(document.querySelectorAll('.card').length);
+};
+</script>
+
+</body>
+</html>

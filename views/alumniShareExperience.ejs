@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Share Experience – Campus Hire</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0f14; --surface: #161a24; --card: #1e2333; --border: #2a3047;
+      --accent: #6c63ff; --accent2: #00d4aa; --danger: #ff5e7e;
+      --text: #e8eaf6; --muted: #7b83a6; --radius: 14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 3rem 1rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem; width: 100%; max-width: 600px; }
+    h1 { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; margin-bottom: .4rem; }
+    h1 span { color: var(--accent2); }
+    .sub { color: var(--muted); font-size: .9rem; margin-bottom: 2rem; }
+    .error-box { background: rgba(255,94,126,.1); border: 1px solid rgba(255,94,126,.3); border-radius: 8px; padding: .75rem 1rem; color: var(--danger); font-size: .875rem; margin-bottom: 1.2rem; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .field { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
+    label { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; font-weight: 500; }
+    input, select, textarea {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: .7rem 1rem;
+      color: var(--text); font-family: 'DM Sans', sans-serif; font-size: .9rem;
+      transition: border-color .2s; outline: none; resize: vertical;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+    textarea { min-height: 90px; }
+    .btn-submit {
+      width: 100%; padding: .85rem; border-radius: 10px; border: none; cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), #9c8fff);
+      color: #fff; font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+      transition: opacity .2s, transform .2s;
+    }
+    .btn-submit:hover { opacity: .88; transform: translateY(-2px); }
+    .back-link { margin-bottom: 1.5rem; color: var(--muted); text-decoration: none; font-size: .875rem; }
+    .back-link:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <a href="/alumni/dashboard" class="back-link">← Back to Dashboard</a>
+  <div class="card">
+    <h1>Share Your <span>Experience</span></h1>
+    <p class="sub">Help future students understand what to expect at your company.</p>
+
+    <% if (error) { %>
+      <div class="error-box">⚠️ <%= error %></div>
+    <% } %>
+
+    <form action="/alumni/share-experience" method="POST">
+      <div class="grid2">
+        <div class="field">
+          <label>Company *</label>
+          <input type="text" name="company" placeholder="e.g. Google" required/>
+        </div>
+        <div class="field">
+          <label>Job Role *</label>
+          <input type="text" name="jobRole" placeholder="e.g. SDE-1" required/>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="field">
+          <label>Batch / Year</label>
+          <input type="text" name="batch" placeholder="e.g. 2024"/>
+        </div>
+        <div class="field">
+          <label>Offer Received?</label>
+          <select name="offerReceived">
+            <option value="yes">✅ Yes</option>
+            <option value="no">❌ No</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>CTC (if comfortable sharing)</label>
+        <input type="text" name="ctc" placeholder="e.g. 18 LPA or Not disclosed"/>
+      </div>
+
+      <div class="field">
+        <label>Interview Rounds *</label>
+        <textarea name="rounds" placeholder="Describe each round briefly (Online Test → Technical 1 → HR...)" required></textarea>
+      </div>
+
+      <div class="field">
+        <label>Overall Experience *</label>
+        <textarea name="overallExperience" placeholder="What was the overall process like? Was it tough? Friendly? Any surprises?" required></textarea>
+      </div>
+
+      <div class="field">
+        <label>Tips for Future Students</label>
+        <textarea name="tips" placeholder="What should students focus on to prepare for this company?"></textarea>
+      </div>
+
+      <button type="submit" class="btn-submit">📝 Submit Experience</button>
+    </form>
+  </div>
+</body>
+</html>

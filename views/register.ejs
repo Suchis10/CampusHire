@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign Up | Campus Hire</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{ margin:0; padding:0; box-sizing:border-box; font-family:'Sora', sans-serif; }
+
+body{
+  height:100vh;
+  display:flex;
+  background:linear-gradient(135deg,#0f172a,#1e2a5a,#3b3fbf);
+}
+
+.left{
+  width:50%;
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:60px;
+}
+
+.left .badge{
+  display:inline-block;
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.2);
+  padding:6px 14px;
+  border-radius:50px;
+  font-size:13px;
+  margin-bottom:20px;
+  color:#93c5fd;
+}
+
+.left h1{ font-size:40px; line-height:1.2; }
+.left span{ color:#60a5fa; }
+.left p{ margin-top:16px; color:#a5b4fc; max-width:380px; line-height:1.7; font-size:15px; }
+
+.features{ margin-top:36px; display:flex; flex-direction:column; gap:14px; }
+.feature{ display:flex; align-items:center; gap:12px; color:#c7d2fe; font-size:14px; }
+.feature .icon{
+  width:36px; height:36px; background:rgba(255,255,255,0.1);
+  border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px;
+}
+
+.right{
+  width:50%;
+  background:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow-y:auto;
+}
+
+.signup-box{ width:380px; padding:20px 0; }
+
+.signup-box h2{ font-size:26px; color:#0f172a; margin-bottom:6px; }
+.signup-box .sub{ color:#64748b; margin-bottom:24px; font-size:14px; }
+
+/* ROLE TOGGLE */
+.role-toggle{
+  display:flex;
+  background:#f1f5f9;
+  border-radius:10px;
+  padding:4px;
+  margin-bottom:22px;
+  gap:4px;
+}
+.role-toggle button{
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:transparent;
+  color:#64748b;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s;
+  font-family:'Sora',sans-serif;
+}
+.role-toggle button.active{
+  background:#2563eb;
+  color:#fff;
+  box-shadow:0 2px 8px rgba(37,99,235,0.3);
+}
+
+.input-group{ margin-bottom:14px; position:relative; }
+
+.input-group label{
+  display:block;
+  font-size:13px;
+  font-weight:600;
+  color:#334155;
+  margin-bottom:6px;
+}
+
+.input-group input, .input-group select{
+  width:100%;
+  padding:11px 14px;
+  border-radius:8px;
+  border:1.5px solid #e2e8f0;
+  outline:none;
+  font-size:14px;
+  font-family:'Sora',sans-serif;
+  color:#0f172a;
+  background:#fff;
+  transition:border 0.2s;
+}
+.input-group input:focus, .input-group select:focus{
+  border-color:#2563eb;
+  box-shadow:0 0 0 3px rgba(37,99,235,0.1);
+}
+
+/* Alumni-only field hidden by default */
+#alumniFields{ display:none; }
+
+.signup-btn{
+  width:100%;
+  padding:13px;
+  background:linear-gradient(135deg,#2563eb,#4f46e5);
+  color:white;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:15px;
+  font-weight:600;
+  font-family:'Sora',sans-serif;
+  margin-top:6px;
+  transition:opacity 0.2s;
+}
+.signup-btn:hover{ opacity:0.9; }
+
+.login-link{
+  text-align:center;
+  margin-top:20px;
+  font-size:14px;
+  color:#64748b;
+}
+.login-link a{ color:#2563eb; text-decoration:none; font-weight:600; }
+</style>
+</head>
+
+<body>
+
+<!-- LEFT -->
+<div class="left">
+  <div class="badge">🎓 Campus Recruitment Platform</div>
+  <h1>Join <span>CampusHire</span> Today</h1>
+  <p>Whether you're a student chasing your dream company or an alumnus giving back — your journey starts here.</p>
+
+  <div class="features">
+    <div class="feature">
+      <div class="icon">📋</div>
+      Real interview questions from top companies
+    </div>
+    <div class="feature">
+      <div class="icon">📊</div>
+      Track your preparation with smart analytics
+    </div>
+    <div class="feature">
+      <div class="icon">🤝</div>
+      Alumni mentorship & referral network
+    </div>
+    <div class="feature">
+      <div class="icon">🔔</div>
+      Get notified for campus drives & deadlines
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT -->
+<div class="right">
+  <div class="signup-box">
+    <h2>Create Account</h2>
+    <p class="sub">Choose your role to get started 🚀</p>
+
+    <!-- ROLE TOGGLE -->
+    <div class="role-toggle">
+      <button type="button" class="active" id="btnStudent" onclick="setRole('student')">🎓 Student</button>
+      <button type="button" id="btnAlumni" onclick="setRole('alumni')">🏆 Alumni</button>
+    </div>
+
+    <form action="/register" method="POST">
+      <input type="hidden" name="role" id="roleInput" value="student">
+
+      <div class="input-group">
+        <label>Full Name</label>
+        <input type="text" name="name" placeholder="e.g. Suchismita Dey" required>
+      </div>
+
+      <div class="input-group">
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="you@college.edu" required>
+      </div>
+
+      <div class="input-group">
+        <label>Branch</label>
+        <select name="branch" required>
+          <option value="" disabled selected>Select your branch</option>
+          <option>CSE</option>
+          <option>ECE</option>
+          <option>IT</option>
+          <option>Mechanical</option>
+          <option>Civil</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label id="batchLabel">Batch Year</label>
+        <input type="number" name="batch" id="batchInput" placeholder="e.g. 2026" min="2020" max="2035" required>
+      </div>
+
+      <!-- Alumni-only fields -->
+      <div id="alumniFields">
+        <div class="input-group">
+          <label>Current Company</label>
+          <input type="text" name="company" placeholder="e.g. Google, TCS...">
+        </div>
+        <div class="input-group">
+          <label>Job Role</label>
+          <input type="text" name="jobRole" placeholder="e.g. Software Engineer">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Create a strong password" required>
+      </div>
+
+      <div class="input-group">
+        <label>Confirm Password</label>
+        <input type="password" name="confirmPassword" placeholder="Repeat your password" required>
+      </div>
+
+      <button class="signup-btn" type="submit">Create Account →</button>
+    </form>
+
+    <div class="login-link">
+      Already have an account? <a href="/">Sign in</a>
+    </div>
+  </div>
+</div>
+
+<script>
+function setRole(role) {
+  document.getElementById('roleInput').value = role;
+  document.getElementById('btnStudent').classList.toggle('active', role === 'student');
+  document.getElementById('btnAlumni').classList.toggle('active', role === 'alumni');
+  document.getElementById('alumniFields').style.display = role === 'alumni' ? 'block' : 'none';
+  document.getElementById('batchLabel').textContent = role === 'alumni' ? 'Graduation Year' : 'Batch Year';
+  document.getElementById('batchInput').placeholder = role === 'alumni' ? 'e.g. 2022' : 'e.g. 2026';
+}
+</script>
+</body>
+</html>
