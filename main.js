@@ -1,14 +1,14 @@
 const express = require("express");
 const path = require("path");
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 const mongoose = require("mongoose");
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-mongoose.connect("mongodb://127.0.0.1:27017/campusHire")
+mongoose.connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/campusHire")
 .then(() => console.log("✅ MongoDB Connected"))
 .catch(err => console.log(err));
 
@@ -25,7 +25,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({                   // ← ADD - saves session to MongoDB
-    mongoUrl: "mongodb://127.0.0.1:27017/campusHire"
+    mongoUrl: process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/campusHire"
   }),
   cookie: {
     secure: false,
