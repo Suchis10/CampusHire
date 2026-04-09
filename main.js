@@ -451,8 +451,8 @@ app.get("/experiences", async (req, res) => {
 });
 // company page with questions
 app.get("/company/:name", async (req, res) => {
-  try {                                                    // ✅ add try/catch
-    const companyName = decodeURIComponent(req.params.name); // ✅ decode URL encoding
+  try {
+    const companyName = decodeURIComponent(req.params.name);
 
     const hardcodedCompanies = [
       { name:"Google",        category:"tech",       package:40, questions:200, logo:"/google.png",    views:3200,   hireRate:19,  type:"Product"       },
@@ -465,15 +465,13 @@ app.get("/company/:name", async (req, res) => {
       { name:"JPMorgan",      category:"Finance",    package:18, questions:180, logo:"/jpmorgan.png",  views:28000,  hireRate:42,  type:"Bank"          },
     ];
 
-    // ✅ always guaranteed to have a company object, never undefined
     const company = hardcodedCompanies.find(
       c => c.name.toLowerCase() === companyName.toLowerCase()
     ) || { name: companyName, logo: null, type: "Alumni", package: null, hireRate: null };
 
-    // ✅ escape special regex characters in company name (fixes "Bnp Paribas" etc.)
     const escaped = companyName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-    const questions = await Question.find({
+    const dbQuestions = await Question.find({        // ✅ renamed to dbQuestions
       company: { $regex: new RegExp(`^${escaped}$`, 'i') }
     })
     .populate("addedBy", "name company jobRole")
@@ -481,7 +479,7 @@ app.get("/company/:name", async (req, res) => {
 
     res.render("companyPage", {
       company,
-      questions,
+      questions: dbQuestions,                        
       userRole: req.session.userRole || "student",
     });
 
