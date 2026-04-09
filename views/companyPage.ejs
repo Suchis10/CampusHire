@@ -2,406 +2,599 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><%= company.name %> Questions – CampusHire</title>
+<title><%= company.name %> - CampusHire</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-*{ margin:0; padding:0; box-sizing:border-box; font-family:'Sora', sans-serif; }
+*{ margin:0; padding:0; box-sizing:border-box; font-family:'Sora',sans-serif; }
 body{ background:#f1f5f9; }
 
 /* ── NAVBAR ── */
-.header{
-  position:sticky; top:0; width:100%;
-  background:#fff; display:flex;
-  justify-content:space-between; align-items:center;
-  padding:0 40px; height:64px;
+.navbar{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0 40px; height:64px; background:white;
+  border-bottom:1px solid #e2e8f0; position:sticky; top:0; z-index:100;
   box-shadow:0 1px 8px rgba(0,0,0,0.06);
-  z-index:1000; border-bottom:1px solid #e2e8f0;
 }
-.logo{ font-size:20px; font-weight:700; color:#0f172a; letter-spacing:-0.5px; }
+.logo{ font-size:20px; font-weight:700; color:#0f172a; }
 .logo span{ color:#2563eb; }
-.nav{ display:flex; align-items:center; gap:6px; }
-.nav a{
-  text-decoration:none; color:#64748b;
-  font-size:14px; font-weight:600;
-  padding:7px 14px; border-radius:8px; transition:all 0.2s;
+.nav-links{ display:flex; align-items:center; gap:6px; }
+.nav-links a{
+  text-decoration:none; color:#64748b; font-size:14px;
+  font-weight:600; padding:7px 14px; border-radius:8px; transition:all 0.2s;
 }
-.nav a:hover{ background:#f1f5f9; color:#0f172a; }
-.nav a.active-link{ color:#2563eb; background:#eff6ff; }
-.back-btn{
-  display:inline-flex; align-items:center; gap:6px;
-  background:#f1f5f9; color:#0f172a; border:none;
-  padding:8px 16px; border-radius:8px; font-size:14px;
-  font-weight:600; font-family:'Sora',sans-serif;
-  cursor:pointer; transition:all 0.2s; text-decoration:none;
+.nav-links a:hover{ background:#f1f5f9; color:#0f172a; }
+.nav-links a.dashboard-link{ color:#2563eb; background:#eff6ff; }
+.nav-links a.dashboard-link:hover{ background:#dbeafe; }
+.nav-btn{
+  background:linear-gradient(135deg,#2563eb,#4f46e5);
+  color:#fff; padding:9px 20px; border-radius:9px;
+  text-decoration:none; font-size:14px; font-weight:600;
 }
-.back-btn:hover{ background:#e2e8f0; }
 
-/* ── HERO ── */
-.company-hero{
+/* ── HERO BANNER ── */
+.hero-banner{
   background:linear-gradient(135deg,#0f172a,#1e2a5a,#3b3fbf);
-  padding:44px 60px; position:relative; overflow:hidden;
+  padding:40px 60px; color:white; position:relative; overflow:hidden;
 }
-.company-hero::before{
-  content:''; position:absolute;
-  width:400px; height:400px; background:rgba(99,102,241,0.12);
-  border-radius:50%; top:-150px; right:-80px;
+.hero-banner::before{
+  content:''; position:absolute; width:500px; height:500px;
+  background:rgba(99,102,241,0.12); border-radius:50%; top:-200px; right:-100px;
 }
-.hero-inner{ display:flex; align-items:center; gap:24px; position:relative; z-index:1; }
-.hero-logo{
-  width:72px; height:72px; border-radius:16px;
-  background:#fff; padding:8px; object-fit:contain;
-  box-shadow:0 4px 16px rgba(0,0,0,0.2);
+.back-link{
+  color:#93c5fd; text-decoration:none; font-size:13px; font-weight:600;
+  display:inline-flex; align-items:center; gap:6px;
+  margin-bottom:24px; position:relative; z-index:1;
 }
-.hero-logo-placeholder{
-  width:72px; height:72px; border-radius:16px;
-  background:linear-gradient(135deg,#ede9fe,#ddd6fe);
-  display:flex; align-items:center; justify-content:center; font-size:32px;
-  flex-shrink:0;
+.back-link:hover{ color:#fff; }
+.company-header{
+  display:flex; align-items:center; justify-content:space-between;
+  position:relative; z-index:1;
 }
-.hero-info h1{
-  font-size:32px; font-weight:700; color:#fff; letter-spacing:-0.5px;
-  text-transform:capitalize;
+.company-left{ display:flex; align-items:center; gap:20px; }
+.avatar{
+  width:72px; height:72px;
+  background:linear-gradient(135deg,#f59e0b,#ef4444);
+  border-radius:18px; display:flex; align-items:center; justify-content:center;
+  font-size:30px; color:white; font-weight:700;
+  border:3px solid rgba(255,255,255,0.2); flex-shrink:0;
 }
-.hero-info p{ color:#c7d2fe; font-size:14px; margin-top:6px; }
-.hero-chips{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
-.hero-chip{
-  background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2);
-  border-radius:20px; padding:4px 14px; font-size:12px;
-  color:rgba(255,255,255,0.9); font-weight:600;
+.company-info h1{ font-size:28px; font-weight:700; margin-bottom:8px; }
+.badges{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+.badge{ padding:4px 14px; border-radius:50px; font-size:12px; font-weight:700; }
+.hard{ background:#fee2e2; color:#dc2626; }
+.medium{ background:#fef3c7; color:#d97706; }
+.easy{ background:#dcfce7; color:#16a34a; }
+.lpa{ background:rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.3); }
+.type-badge{ background:rgba(99,102,241,0.3); color:#c7d2fe; border:1px solid rgba(99,102,241,0.4); }
+.company-desc{ color:#c7d2fe; font-size:14px; }
+.stats-row{ display:flex; gap:14px; }
+.stat-box{
+  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15);
+  padding:14px 22px; border-radius:14px; text-align:center; min-width:90px;
+}
+.stat-box .num{ font-size:22px; font-weight:700; color:#fff; }
+.stat-box .lbl{ font-size:11px; color:#c7d2fe; margin-top:2px; }
+
+/* ── MAIN LAYOUT ── */
+.main{ display:flex; gap:24px; padding:28px 40px; align-items:flex-start; }
+
+/* ── SIDEBAR ── */
+.sidebar{ width:260px; flex-shrink:0; }
+.box{
+  background:white; padding:20px; border-radius:16px;
+  margin-bottom:18px; border:1px solid #e2e8f0;
+}
+.box h3{
+  font-size:14px; font-weight:700; color:#0f172a;
+  margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid #f1f5f9;
+}
+.round-item{
+  display:flex; align-items:center; gap:10px;
+  padding:8px 0; font-size:13px; color:#475569;
+  border-bottom:1px solid #f8fafc;
+}
+.round-item:last-child{ border-bottom:none; }
+.round-num{
+  width:24px; height:24px; background:#eff6ff; color:#2563eb;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700; flex-shrink:0;
+}
+.tip-box{
+  background:linear-gradient(135deg,#eff6ff,#f0fdf4);
+  border:1px solid #bfdbfe; padding:16px; border-radius:14px;
+  font-size:13px; color:#1e40af; line-height:1.6;
 }
 
-/* ── FILTERS + SEARCH ── */
-.controls{
-  width:90%; margin:28px auto 0;
-  display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+/* ── PROGRESS BOX ── */
+.progress-box{
+  background:white; padding:20px; border-radius:16px;
+  margin-bottom:18px; border:1px solid #e2e8f0;
 }
-.q-search{
-  flex:1; min-width:200px; position:relative;
+.progress-box h3{
+  font-size:14px; font-weight:700; color:#0f172a;
+  margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid #f1f5f9;
 }
-.q-search input{
-  width:100%; padding:11px 16px 11px 40px;
-  border-radius:10px; border:1.5px solid #e2e8f0;
-  font-size:13px; font-family:'Sora',sans-serif; outline:none;
+.progress-stat{
+  display:flex; justify-content:space-between;
+  align-items:center; margin-bottom:10px;
+}
+.progress-stat .p-label{ font-size:13px; color:#64748b; font-weight:600; }
+.progress-stat .p-val{ font-size:15px; font-weight:700; color:#0f172a; }
+.progress-bar-wrap{
+  background:#f1f5f9; border-radius:99px; height:7px; margin-top:4px;
+}
+.progress-bar-fill{
+  background:linear-gradient(90deg,#2563eb,#4f46e5);
+  height:100%; border-radius:99px; transition:width 0.5s;
+}
+
+/* ── CONTENT ── */
+.content{ flex:1; }
+
+/* SEARCH BAR */
+.search-wrap{
+  position:relative; margin-bottom:16px;
+}
+.search-wrap input{
+  width:100%; padding:12px 16px 12px 42px;
+  border-radius:12px; border:1.5px solid #e2e8f0;
+  font-size:14px; font-family:'Sora',sans-serif; outline:none;
   background:#fff; transition:border 0.2s;
 }
-.q-search input:focus{ border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
-.q-search-icon{
-  position:absolute; left:12px; top:50%;
-  transform:translateY(-50%); font-size:14px; color:#94a3b8;
-}
-.filter-pill{
-  padding:8px 16px; border-radius:50px; border:1.5px solid #e2e8f0;
-  cursor:pointer; background:#fff; color:#64748b;
-  font-size:13px; font-weight:600; font-family:'Sora',sans-serif; transition:all 0.2s;
-  white-space:nowrap;
-}
-.filter-pill:hover{ border-color:#2563eb; color:#2563eb; }
-.filter-pill.active{
-  background:#2563eb; color:#fff; border-color:#2563eb;
-  box-shadow:0 2px 8px rgba(37,99,235,0.3);
+.search-wrap input:focus{ border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+.search-icon{
+  position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  font-size:16px; color:#94a3b8;
 }
 
-/* ── RESULTS INFO ── */
-.q-results-info{
-  width:90%; margin:14px auto 6px;
-  font-size:13px; color:#64748b; font-weight:600;
+/* FILTER TABS */
+.tabs{
+  display:flex; gap:8px; margin-bottom:14px;
+  background:#fff; padding:6px; border-radius:14px;
+  border:1px solid #e2e8f0; width:fit-content; flex-wrap:wrap;
+}
+.tabs button{
+  padding:8px 18px; border:none; border-radius:10px;
+  background:transparent; cursor:pointer; font-size:13px;
+  font-weight:600; color:#64748b; font-family:'Sora',sans-serif; transition:all 0.2s;
+}
+.tabs button.active{
+  background:#2563eb; color:#fff; box-shadow:0 2px 8px rgba(37,99,235,0.3);
 }
 
-/* ── QUESTIONS GRID ── */
-.questions-container{ width:90%; margin:0 auto 80px; }
-.questions-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(320px,1fr));
-  gap:18px;
-}
-
-/* ── QUESTION CARD ── */
-.qcard{
-  background:#fff; border-radius:16px; padding:22px 24px;
-  border:1.5px solid #e2e8f0; transition:all 0.22s;
-  position:relative; overflow:hidden;
-  display:flex; flex-direction:column; gap:12px;
-}
-.qcard::before{
-  content:''; position:absolute; top:0; left:0; right:0; height:3px;
-  background:linear-gradient(90deg,#2563eb,#4f46e5); opacity:0; transition:opacity 0.2s;
-}
-.qcard:hover{
-  border-color:#bfdbfe; transform:translateY(-4px);
-  box-shadow:0 12px 28px rgba(37,99,235,0.1);
-}
-.qcard:hover::before{ opacity:1; }
-
-/* top row */
-.qcard-top{ display:flex; justify-content:space-between; align-items:center; }
-.qcard-round{
-  font-size:11px; font-weight:700; color:#64748b;
-  background:#f1f5f9; padding:3px 10px; border-radius:20px;
-}
-.diff-badge{ font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; }
-.diff-Easy  { background:#dcfce7; color:#166534; }
-.diff-Medium{ background:#fef3c7; color:#92400e; }
-.diff-Hard  { background:#fee2e2; color:#991b1b; }
-
-/* question text */
-.qcard-text{
-  font-size:15px; color:#0f172a; font-weight:600; line-height:1.65;
-}
-
-/* category chip */
-.qcard-category{
-  display:inline-flex; align-items:center; gap:5px;
-  background:#f1f5f9; border-radius:20px;
-  padding:3px 10px; font-size:11px; color:#64748b; font-weight:600;
-  width:fit-content;
-}
-
-/* approach */
-.qcard-approach{
-  background:#f8fafc; border-left:3px solid #2563eb;
-  border-radius:0 8px 8px 0; padding:10px 14px;
-}
-.approach-label{
-  font-size:10px; font-weight:700; color:#2563eb;
-  text-transform:uppercase; letter-spacing:.6px; margin-bottom:5px;
-  display:flex; align-items:center; gap:4px;
-}
-.approach-text{ font-size:13px; color:#475569; line-height:1.55; }
-
-/* footer */
-.qcard-footer{
+/* Q COUNT ROW */
+.q-count-row{
   display:flex; justify-content:space-between; align-items:center;
-  border-top:1px solid #f1f5f9; padding-top:12px; margin-top:auto;
+  margin-bottom:16px;
 }
-.lc-btn{
+.q-count{ font-size:13px; color:#64748b; font-weight:600; }
+.solved-count{
+  font-size:13px; font-weight:700; color:#16a34a;
+  background:#dcfce7; padding:4px 12px; border-radius:20px;
+  display:flex; align-items:center; gap:5px;
+}
+
+/* QUESTION CARD */
+.q-card{
+  background:white; padding:20px 24px; border-radius:16px;
+  margin-bottom:14px; border:1.5px solid #e2e8f0;
+  transition:all 0.2s; position:relative; overflow:hidden;
+}
+.q-card::before{
+  content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+  background:linear-gradient(180deg,#2563eb,#4f46e5); opacity:0; transition:opacity 0.2s;
+}
+.q-card:hover{ border-color:#bfdbfe; box-shadow:0 8px 20px rgba(0,0,0,0.07); transform:translateY(-2px); }
+.q-card:hover::before{ opacity:1; }
+.q-card.solved{ background:#f0fdf4; border-color:#86efac; opacity:0.9; }
+.q-card.solved::before{ background:linear-gradient(180deg,#22c55e,#16a34a); opacity:1; }
+.q-card.solved .q-title{ text-decoration:line-through; color:#94a3b8; }
+
+.q-header{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
+.q-left{ display:flex; gap:14px; align-items:flex-start; flex:1; }
+.q-number{
+  width:30px; height:30px; background:#eff6ff; color:#2563eb;
+  border-radius:8px; display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:700; flex-shrink:0;
+}
+.q-title{ font-size:15px; font-weight:600; color:#0f172a; margin-bottom:8px; line-height:1.4; transition:all 0.2s; }
+
+.tags{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+.tag{ padding:3px 10px; border-radius:50px; font-size:11px; font-weight:600; }
+.tag-diff-hard{ background:#fee2e2; color:#dc2626; }
+.tag-diff-medium{ background:#fef3c7; color:#d97706; }
+.tag-diff-easy{ background:#dcfce7; color:#16a34a; }
+.tag-gray{ background:#f1f5f9; color:#64748b; }
+.tag-orange{ background:#ffedd5; color:#ea580c; }
+.tag-leetcode{
+  background:#fef3c7; color:#d97706; text-decoration:none;
+  padding:3px 10px; border-radius:50px; font-size:11px; font-weight:600;
+  border:1px solid #fde68a; transition:all 0.2s;
+}
+.tag-leetcode:hover{ background:#d97706; color:#fff; }
+
+/* contributor tag */
+.tag-contributor{
   display:inline-flex; align-items:center; gap:5px;
-  background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe;
-  border-radius:7px; padding:4px 12px;
-  font-size:12px; font-weight:700; text-decoration:none; transition:all 0.15s;
+  background:#ede9fe; color:#6d28d9; padding:3px 10px;
+  border-radius:50px; font-size:11px; font-weight:600;
 }
-.lc-btn:hover{ background:#2563eb; color:#fff; border-color:#2563eb; }
-.contributor{
-  display:flex; align-items:center; gap:7px;
-}
-.contributor-avatar{
-  width:28px; height:28px; border-radius:50%;
+.contributor-dot{
+  width:16px; height:16px; border-radius:50%;
   background:linear-gradient(135deg,#2563eb,#4f46e5);
-  color:#fff; font-size:12px; font-weight:700;
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  color:#fff; font-size:9px; font-weight:700;
+  display:inline-flex; align-items:center; justify-content:center;
 }
-.contributor-info{ display:flex; flex-direction:column; }
-.contributor-name{ font-size:12px; font-weight:700; color:#334155; }
-.contributor-role{ font-size:10px; color:#94a3b8; font-weight:500; }
 
-/* ── EMPTY STATE ── */
-.empty-q{
-  text-align:center; padding:70px 20px; color:#94a3b8;
-  background:#fff; border-radius:16px; border:1.5px dashed #e2e8f0;
+/* TICK + CHEVRON */
+.q-actions{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.tick-btn{
+  width:28px; height:28px; border-radius:50%; border:2px solid #d1d5db;
+  background:white; cursor:pointer; font-size:14px;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; margin-top:2px; transition:all 0.2s; color:#94a3b8;
 }
-.empty-q .emoji{ font-size:48px; margin-bottom:14px; }
-.empty-q h3{ font-size:17px; font-weight:700; color:#64748b; margin-bottom:6px; }
-.empty-q p{ font-size:14px; }
+.tick-btn:hover{ border-color:#22c55e; color:#22c55e; transform:scale(1.1); }
+.tick-btn.ticked{ background:#22c55e; border-color:#22c55e; color:white; }
+.chevron{ color:#94a3b8; font-size:18px; transition:transform 0.2s; cursor:pointer; margin-top:2px; }
+.chevron.open{ transform:rotate(180deg); }
 
-/* ── STATS BAR ── */
-.stats-bar{
-  width:90%; margin:20px auto 24px;
-  display:flex; gap:12px; flex-wrap:wrap;
+/* APPROACH */
+.approach{
+  display:none; margin-top:16px; padding:16px;
+  background:#f8fafc; border-radius:10px; border:1px solid #e2e8f0;
+  font-size:14px; color:#334155; line-height:1.7;
 }
-.stat-pill{
-  background:#fff; border:1px solid #e2e8f0;
-  border-radius:10px; padding:10px 18px;
-  display:flex; flex-direction:column; gap:2px;
-  box-shadow:0 1px 3px rgba(0,0,0,0.04);
+.approach b{ color:#0f172a; display:block; margin-bottom:6px; font-size:13px; }
+
+/* EMPTY */
+.empty{ text-align:center; padding:60px 20px; color:#94a3b8; }
+.empty .emoji{ font-size:48px; margin-bottom:14px; }
+
+/* TOAST */
+.toast{
+  position:fixed; bottom:100px; right:30px;
+  background:#0f172a; color:#fff;
+  padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600;
+  opacity:0; transform:translateY(10px); transition:all 0.3s;
+  z-index:9999; pointer-events:none;
 }
-.stat-pill-label{ font-size:11px; color:#94a3b8; font-weight:600; text-transform:uppercase; letter-spacing:.4px; }
-.stat-pill-value{ font-size:18px; font-weight:700; color:#0f172a; }
+.toast.show{ opacity:1; transform:translateY(0); }
 </style>
 </head>
 
 <body>
 
 <!-- NAVBAR -->
-<div class="header">
+<div class="navbar">
   <div class="logo">🎓 Campus<span>Hire</span></div>
-  <div class="nav">
-    <a href="/prepare">← All Companies</a>
+  <div class="nav-links">
+    <a href="/main">Home</a>
+    <a href="/prepare">Companies</a>
     <a href="/question-bank">Question Bank</a>
     <a href="/analytics">Analytics</a>
     <% if (typeof userRole !== 'undefined' && userRole === 'alumni') { %>
-      <a href="/alumni/dashboard" class="active-link">🏆 My Dashboard</a>
+      <a href="/alumni/dashboard" class="dashboard-link">🏆 My Dashboard</a>
     <% } else { %>
-      <a href="/dashboard" class="active-link">📊 My Dashboard</a>
+      <a href="/dashboard" class="dashboard-link">📊 My Dashboard</a>
     <% } %>
   </div>
+  <a href="/prepare" class="nav-btn">← All Companies</a>
 </div>
 
-<!-- COMPANY HERO -->
-<div class="company-hero">
-  <div class="hero-inner">
-    <% if (company.logo) { %>
-      <img src="<%= company.logo %>" class="hero-logo" onerror="this.style.display='none'">
-    <% } else { %>
-      <div class="hero-logo-placeholder">🏢</div>
-    <% } %>
-    <div class="hero-info">
-      <h1><%= company.name %></h1>
-      <p>Interview questions contributed by alumni who cracked this company.</p>
-      <div class="hero-chips">
-        <% if (company.type) { %><span class="hero-chip"><%= company.type %></span><% } %>
-        <% if (company.package) { %><span class="hero-chip">💰 <%= company.package %> LPA</span><% } %>
-        <% if (company.hireRate) { %><span class="hero-chip">📈 <%= company.hireRate %>% hire rate</span><% } %>
-        <span class="hero-chip">📋 <%= questions.length %> questions</span>
+<!-- HERO BANNER -->
+<div class="hero-banner">
+  <a href="/prepare" class="back-link">← Back to Companies</a>
+
+  <div class="company-header">
+    <div class="company-left">
+      <div class="avatar">
+        <% if (company.logo) { %>
+          <img src="<%= company.logo %>" style="width:52px;height:52px;object-fit:contain;border-radius:10px;" onerror="this.style.display='none'">
+        <% } else { %>
+          <%= company.name.charAt(0).toUpperCase() %>
+        <% } %>
+      </div>
+      <div class="company-info">
+        <h1 style="text-transform:capitalize"><%= company.name %></h1>
+        <div class="badges">
+          <% if (company.package) { %>
+            <span class="badge <%= company.package > 30 ? 'hard' : company.package > 15 ? 'medium' : 'easy' %>">
+              <%= company.package > 30 ? "🔴 Hard" : company.package > 15 ? "🟡 Medium" : "🟢 Easy" %>
+            </span>
+            <span class="badge lpa">💰 <%= company.package %> LPA</span>
+          <% } %>
+          <% if (company.type) { %>
+            <span class="badge type-badge"><%= company.type %></span>
+          <% } %>
+        </div>
+        <p class="company-desc">
+          <% if (company.package) { %>
+            <%= company.name %> is a <%= company.type %> company — <%= questions.length %> alumni-contributed questions.
+          <% } else { %>
+            <%= questions.length %> questions contributed by alumni who cracked this company.
+          <% } %>
+        </p>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- STATS BAR -->
-<% if (questions.length > 0) {
-  const easy   = questions.filter(q => q.difficulty === 'Easy').length;
-  const medium = questions.filter(q => q.difficulty === 'Medium').length;
-  const hard   = questions.filter(q => q.difficulty === 'Hard').length;
-%>
-<div class="stats-bar">
-  <div class="stat-pill">
-    <span class="stat-pill-label">Total</span>
-    <span class="stat-pill-value"><%= questions.length %></span>
-  </div>
-  <div class="stat-pill">
-    <span class="stat-pill-label">🟢 Easy</span>
-    <span class="stat-pill-value" style="color:#166534"><%= easy %></span>
-  </div>
-  <div class="stat-pill">
-    <span class="stat-pill-label">🟡 Medium</span>
-    <span class="stat-pill-value" style="color:#92400e"><%= medium %></span>
-  </div>
-  <div class="stat-pill">
-    <span class="stat-pill-label">🔴 Hard</span>
-    <span class="stat-pill-value" style="color:#991b1b"><%= hard %></span>
-  </div>
-</div>
-<% } %>
-
-<!-- SEARCH + FILTERS -->
-<div class="controls">
-  <div class="q-search">
-    <span class="q-search-icon">🔍</span>
-    <input type="text" id="qSearch" placeholder="Search questions..." onkeyup="filterQuestions()">
-  </div>
-  <button class="filter-pill active" onclick="setFilter('all', this)">All</button>
-  <button class="filter-pill" onclick="setFilter('Easy', this)">🟢 Easy</button>
-  <button class="filter-pill" onclick="setFilter('Medium', this)">🟡 Medium</button>
-  <button class="filter-pill" onclick="setFilter('Hard', this)">🔴 Hard</button>
-  <button class="filter-pill" onclick="setFilter('DSA', this)">DSA</button>
-  <button class="filter-pill" onclick="setFilter('HR', this)">HR</button>
-  <button class="filter-pill" onclick="setFilter('Core CS', this)">Core CS</button>
-</div>
-
-<!-- RESULTS INFO -->
-<div class="q-results-info" id="qResultsInfo"></div>
-
-<!-- QUESTIONS GRID -->
-<div class="questions-container">
-  <% if (questions.length === 0) { %>
-  <div class="empty-q">
-    <div class="emoji">📭</div>
-    <h3>No questions yet for <%= company.name %></h3>
-    <p>Alumni who interviewed here can add questions from their dashboard.</p>
-  </div>
-  <% } else { %>
-  <div class="questions-grid" id="questionsGrid">
-    <% questions.forEach((q, i) => { %>
-    <div class="qcard"
-         data-difficulty="<%= q.difficulty || 'Medium' %>"
-         data-category="<%= q.category || '' %>"
-         data-text="<%= q.questionText.toLowerCase() %>">
-
-      <!-- Top: round + difficulty -->
-      <div class="qcard-top">
-        <span class="qcard-round"><%= q.round || 'General' %></span>
-        <span class="diff-badge diff-<%= q.difficulty || 'Medium' %>"><%= q.difficulty || 'Medium' %></span>
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="num"><%= questions.length %></div>
+        <div class="lbl">Questions</div>
       </div>
-
-      <!-- Question -->
-      <p class="qcard-text"><%= q.questionText %></p>
-
-      <!-- Category -->
-      <div class="qcard-category">📂 <%= q.category || 'General' %></div>
-
-      <!-- Approach -->
-      <% if (q.approach && q.approach.trim() !== '') { %>
-      <div class="qcard-approach">
-        <div class="approach-label">💡 Approach</div>
-        <div class="approach-text"><%= q.approach %></div>
+      <% if (company.hireRate) { %>
+      <div class="stat-box">
+        <div class="num"><%= company.hireRate %>%</div>
+        <div class="lbl">Hire Rate</div>
       </div>
       <% } %>
-
-      <!-- Footer: leetcode + contributor -->
-      <div class="qcard-footer">
-        <% if (q.leetcode && q.leetcode.trim() !== '') { %>
-          <a href="<%= q.leetcode %>" target="_blank" class="lc-btn">🔗 LeetCode</a>
-        <% } else { %>
-          <span></span>
-        <% } %>
-
-        <% if (q.addedBy && q.addedBy.name) { %>
-        <div class="contributor"
-             title="<%= q.addedBy.jobRole || '' %><%= q.addedBy.company ? ' at ' + q.addedBy.company : '' %>">
-          <div class="contributor-avatar"><%= q.addedBy.name.charAt(0).toUpperCase() %></div>
-          <div class="contributor-info">
-            <span class="contributor-name"><%= q.addedBy.name.split(' ')[0] %></span>
-            <% if (q.addedBy.company) { %>
-            <span class="contributor-role"><%= q.addedBy.company %></span>
-            <% } %>
-          </div>
-        </div>
-        <% } %>
+      <% if (company.views) { %>
+      <div class="stat-box">
+        <div class="num"><%= company.views %>+</div>
+        <div class="lbl">Views</div>
       </div>
-
+      <% } %>
     </div>
-    <% }) %>
   </div>
-  <% } %>
 </div>
 
-<script>
-  let currentFilter = 'all';
+<!-- MAIN -->
+<div class="main">
 
-  function setFilter(val, btn){
-    currentFilter = val;
-    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    filterQuestions();
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- Progress box -->
+    <div class="progress-box" id="progressBox">
+      <h3>📊 Your Progress</h3>
+      <div class="progress-stat">
+        <span class="p-label">Solved</span>
+        <span class="p-val" id="solvedNum">0</span>
+      </div>
+      <div class="progress-stat">
+        <span class="p-label">Total</span>
+        <span class="p-val"><%= questions.length %></span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3>🎯 Interview Rounds</h3>
+      <div class="round-item"><div class="round-num">1</div> Online Assessment</div>
+      <div class="round-item"><div class="round-num">2</div> Technical Round 1</div>
+      <div class="round-item"><div class="round-num">3</div> Technical Round 2</div>
+      <div class="round-item"><div class="round-num">4</div> HR Round</div>
+    </div>
+
+    <% if (company.category) { %>
+    <div class="box">
+      <h3>💼 Roles Offered</h3>
+      <div class="round-item">🏷 <%= company.category %> Roles</div>
+      <% if (company.type) { %><div class="round-item">🏢 <%= company.type %></div><% } %>
+    </div>
+    <% } %>
+
+    <div class="tip-box">
+      💡 <b>Pro Tip</b><br>
+      Focus on DSA fundamentals and practice at least 2 questions daily to crack <%= company.name %>.
+    </div>
+
+  </div>
+
+  <!-- QUESTIONS -->
+  <div class="content">
+
+    <!-- Search -->
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search questions..." onkeyup="searchQuestions()">
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="tabs">
+      <button onclick="filterQ('all', event)" class="active">🌐 All</button>
+      <button onclick="filterQ('dsa', event)">💻 DSA</button>
+      <button onclick="filterQ('aptitude', event)">📊 Aptitude</button>
+      <button onclick="filterQ('technical', event)">⚙️ Technical</button>
+      <button onclick="filterQ('hr', event)">🤝 HR</button>
+      <button onclick="filterQ('solved', event)">✅ Solved</button>
+      <button onclick="filterQ('unsolved', event)">○ Unsolved</button>
+    </div>
+
+    <!-- Count row -->
+    <div class="q-count-row">
+      <div class="q-count" id="qCount"></div>
+      <div class="solved-count">✅ <span id="solvedCountBadge">0</span> solved</div>
+    </div>
+
+    <% if (questions.length === 0) { %>
+      <div class="empty">
+        <div class="emoji">📭</div>
+        <p>No questions yet for <%= company.name %>.</p>
+        <p style="margin-top:8px;font-size:13px;">Alumni who cracked this company can add questions from their dashboard.</p>
+      </div>
+    <% } %>
+
+    <% questions.forEach(function(q, i) { %>
+      <div class="q-card" data-type="<%= (q.category || '').toLowerCase() %>" data-text="<%= q.questionText.toLowerCase() %>" id="card-<%= q._id %>">
+
+        <div class="q-header">
+
+          <!-- LEFT: number + title + tags -->
+          <div class="q-left" onclick="toggleApproach('<%= q._id %>')" style="cursor:pointer;">
+            <div class="q-number"><%= i+1 %></div>
+            <div>
+              <div class="q-title" id="title-<%= q._id %>"><%= q.questionText %></div>
+              <div class="tags">
+                <span class="tag <%= q.difficulty === 'Hard' ? 'tag-diff-hard' : q.difficulty === 'Medium' ? 'tag-diff-medium' : 'tag-diff-easy' %>">
+                  <%= q.difficulty || 'Medium' %>
+                </span>
+                <span class="tag tag-gray"><%= q.category || 'General' %></span>
+                <% if (q.round) { %>
+                  <span class="tag tag-orange"><%= q.round %></span>
+                <% } %>
+                <% if (q.leetcode && q.leetcode.trim() !== '') { %>
+                  <a href="<%= q.leetcode %>" target="_blank" class="tag-leetcode">🟨 LeetCode</a>
+                <% } %>
+                <% if (q.addedBy && q.addedBy.name) { %>
+                  <span class="tag-contributor"
+                        title="<%= q.addedBy.jobRole || '' %><%= q.addedBy.company ? ' at ' + q.addedBy.company : '' %>">
+                    <span class="contributor-dot"><%= q.addedBy.name.charAt(0).toUpperCase() %></span>
+                    <%= q.addedBy.name.split(' ')[0] %>
+                  </span>
+                <% } %>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: tick + chevron -->
+          <div class="q-actions">
+            <button
+              class="tick-btn"
+              id="tick-<%= q._id %>"
+              onclick="toggleSolved('<%= q._id %>', this)"
+              title="Mark as solved">
+              ✓
+            </button>
+            <div class="chevron" id="chevron-<%= q._id %>" onclick="toggleApproach('<%= q._id %>')">⌄</div>
+          </div>
+        </div>
+
+        <!-- APPROACH (expandable) -->
+        <% if (q.approach && q.approach.trim() !== '') { %>
+        <div class="approach" id="approach-<%= q._id %>">
+          <b>💡 APPROACH / ANSWER:</b>
+          <p><%= q.approach %></p>
+        </div>
+        <% } else { %>
+        <div class="approach" id="approach-<%= q._id %>">
+          <b>💡 APPROACH / ANSWER:</b>
+          <p style="color:#94a3b8;font-style:italic;">No approach added yet.</p>
+        </div>
+        <% } %>
+
+      </div>
+    <% }); %>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const TOTAL = <%= questions.length %>;
+  let solvedCount = 0;
+
+  // ── ON LOAD: update count ──
+  window.onload = function(){
+    updateCount();
+  };
+
+  // ── SEARCH ──
+  function searchQuestions(){
+    const val = document.getElementById('searchInput').value.toLowerCase();
+    const cards = document.querySelectorAll('.q-card');
+    let visible = 0;
+    cards.forEach(card => {
+      const match = card.dataset.text.includes(val);
+      card.style.display = match ? 'block' : 'none';
+      if(match) visible++;
+    });
+    document.getElementById('qCount').textContent = visible + ' questions found';
   }
 
-  function filterQuestions(){
-    const search = document.getElementById('qSearch').value.toLowerCase();
-    const cards  = document.querySelectorAll('.qcard');
-    let visible  = 0;
+  // ── FILTER ──
+  function filterQ(type, event){
+    const cards = document.querySelectorAll('.q-card');
+    const btns  = document.querySelectorAll('.tabs button');
+    btns.forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    let visible = 0;
 
     cards.forEach(card => {
-      const diffMatch = currentFilter === 'all'
-        || card.dataset.difficulty === currentFilter
-        || card.dataset.category   === currentFilter;
-      const textMatch = card.dataset.text.includes(search);
-      const show = diffMatch && textMatch;
-      card.style.display = show ? 'flex' : 'none';
+      let show = false;
+      if      (type === 'all')      show = true;
+      else if (type === 'solved')   show = card.classList.contains('solved');
+      else if (type === 'unsolved') show = !card.classList.contains('solved');
+      else                          show = card.dataset.type === type;
+
+      card.style.display = show ? 'block' : 'none';
       if(show) visible++;
     });
 
-    document.getElementById('qResultsInfo').textContent =
-      visible + ' question' + (visible !== 1 ? 's' : '') + ' found';
+    updateCount();
   }
 
-  // init count
-  window.onload = function(){
-    const total = document.querySelectorAll('.qcard').length;
-    document.getElementById('qResultsInfo').textContent =
-      total + ' question' + (total !== 1 ? 's' : '') + ' found';
-  };
+  function updateCount(){
+    const visible = [...document.querySelectorAll('.q-card')]
+      .filter(c => c.style.display !== 'none').length;
+    document.getElementById('qCount').textContent = visible + ' questions found';
+  }
+
+  // ── TOGGLE APPROACH ──
+  function toggleApproach(qId){
+    const approach = document.getElementById('approach-' + qId);
+    const chevron  = document.getElementById('chevron-'  + qId);
+    const isOpen   = approach.style.display === 'block';
+    approach.style.display = isOpen ? 'none' : 'block';
+    chevron.classList.toggle('open', !isOpen);
+  }
+
+  // ── TOGGLE SOLVED ──
+  async function toggleSolved(questionId, btn) {
+    try {
+      const res  = await fetch('/toggle-solved', {
+        method:      'POST',
+        credentials: 'include',
+        headers:     { 'Content-Type': 'application/json' },
+        body:        JSON.stringify({ questionId })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        const card = document.getElementById('card-' + questionId);
+
+        if (data.solved) {
+          btn.classList.add('ticked');
+          card.classList.add('solved');
+          solvedCount++;
+          showToast('✅ Marked as solved! Dashboard updated.');
+        } else {
+          btn.classList.remove('ticked');
+          card.classList.remove('solved');
+          solvedCount = Math.max(0, solvedCount - 1);
+          showToast('↩️ Marked as unsolved.');
+        }
+
+        // update sidebar progress
+        document.getElementById('solvedNum').textContent       = solvedCount;
+        document.getElementById('solvedCountBadge').textContent = solvedCount;
+        const pct = TOTAL > 0 ? Math.round((solvedCount / TOTAL) * 100) : 0;
+        document.getElementById('progressFill').style.width   = pct + '%';
+
+      } else {
+        showToast('⚠️ Please login to track progress.');
+      }
+    } catch(err) {
+      console.log(err);
+      showToast('Something went wrong.');
+    }
+  }
+
+  // ── TOAST ──
+  function showToast(msg){
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
 </script>
 
 </body>
 </html>
+
