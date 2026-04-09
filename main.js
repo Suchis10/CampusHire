@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 10000;
 const mongoose = require("mongoose");
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -490,6 +490,6 @@ app.get("/company/:name", async (req, res) => {
     res.send("Something went wrong loading this company page.");
   }
 });
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log(`Server running on http://localhost:${port}`);
 });
