@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alumni Experiences – CampusHire</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{ margin:0; padding:0; box-sizing:border-box; font-family:'Sora',sans-serif; }
+body{ background:#f1f5f9; }
+
+/* ── NAVBAR ── */
+.navbar{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0 40px; height:64px; background:#fff;
+  border-bottom:1px solid #e2e8f0; position:sticky; top:0; z-index:100;
+  box-shadow:0 1px 8px rgba(0,0,0,0.06);
+}
+.logo{ font-size:20px; font-weight:700; color:#0f172a; letter-spacing:-0.5px; }
+.logo span{ color:#2563eb; }
+.nav-links{ display:flex; align-items:center; gap:6px; }
+.nav-links a{
+  text-decoration:none; color:#64748b; font-size:14px;
+  font-weight:600; padding:7px 14px; border-radius:8px; transition:all 0.2s;
+}
+.nav-links a:hover{ background:#f1f5f9; color:#0f172a; }
+.nav-links a.active{ color:#2563eb; background:#eff6ff; }
+.nav-links a.dashboard-link{ color:#2563eb; background:#eff6ff; }
+.nav-btn{
+  background:linear-gradient(135deg,#2563eb,#4f46e5);
+  color:#fff; padding:9px 20px; border-radius:9px;
+  text-decoration:none; font-size:14px; font-weight:600; transition:opacity 0.2s;
+}
+.nav-btn:hover{ opacity:0.9; }
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(135deg,#0f172a,#1e2a5a,#3b3fbf);
+  padding:50px 60px; color:#fff; position:relative; overflow:hidden;
+}
+.hero::before{
+  content:''; position:absolute; width:500px; height:500px;
+  background:rgba(99,102,241,0.12); border-radius:50%; top:-200px; right:-100px;
+}
+.hero-inner{ position:relative; z-index:1; }
+.hero h1{ font-size:34px; font-weight:700; margin-bottom:10px; }
+.hero h1 span{ color:#60a5fa; }
+.hero p{ color:#c7d2fe; font-size:15px; max-width:560px; line-height:1.7; }
+.hero-stats{ display:flex; gap:24px; margin-top:28px; flex-wrap:wrap; }
+.hero-stat{
+  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15);
+  border-radius:12px; padding:12px 22px; text-align:center;
+}
+.hero-stat .h-num{ font-size:22px; font-weight:700; color:#fff; }
+.hero-stat .h-lbl{ font-size:11px; color:#c7d2fe; margin-top:2px; }
+
+/* ── CONTROLS ── */
+.controls{
+  width:90%; margin:28px auto 0;
+  display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+}
+.search-wrap{ flex:1; min-width:220px; position:relative; }
+.search-wrap input{
+  width:100%; padding:12px 16px 12px 42px;
+  border-radius:12px; border:1.5px solid #e2e8f0;
+  font-size:14px; font-family:'Sora',sans-serif; outline:none;
+  background:#fff; transition:border 0.2s;
+}
+.search-wrap input:focus{ border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+.search-icon{ position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:15px; color:#94a3b8; }
+.filter-pill{
+  padding:8px 18px; border-radius:50px; border:1.5px solid #e2e8f0;
+  cursor:pointer; background:#fff; color:#64748b;
+  font-size:13px; font-weight:600; font-family:'Sora',sans-serif;
+  transition:all 0.2s; white-space:nowrap;
+}
+.filter-pill:hover{ border-color:#2563eb; color:#2563eb; }
+.filter-pill.active{ background:#2563eb; color:#fff; border-color:#2563eb; box-shadow:0 2px 8px rgba(37,99,235,0.3); }
+
+/* ── RESULTS INFO ── */
+.results-info{
+  width:90%; margin:14px auto 8px;
+  font-size:13px; color:#64748b; font-weight:600;
+}
+
+/* ── GRID ── */
+.grid-container{ width:90%; margin:0 auto 80px; }
+.exp-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(360px, 1fr));
+  gap:20px;
+}
+
+/* ── EXPERIENCE CARD ── */
+.exp-card{
+  background:#fff; border-radius:18px; border:1.5px solid #e2e8f0;
+  overflow:hidden; transition:all 0.25s; position:relative;
+}
+.exp-card:hover{ transform:translateY(-5px); box-shadow:0 16px 40px rgba(0,0,0,0.1); border-color:#bfdbfe; }
+
+/* card top stripe */
+.exp-card-top{
+  background:linear-gradient(135deg,#0f172a,#1e2a5a);
+  padding:20px 22px; position:relative; overflow:hidden;
+}
+.exp-card-top::before{
+  content:''; position:absolute; width:160px; height:160px;
+  background:rgba(99,102,241,0.15); border-radius:50%; top:-60px; right:-40px;
+}
+.exp-company-row{ display:flex; justify-content:space-between; align-items:flex-start; position:relative; z-index:1; }
+.exp-company{ font-size:18px; font-weight:700; color:#fff; text-transform:capitalize; }
+.offer-badge{
+  font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px;
+  flex-shrink:0; margin-top:2px;
+}
+.offer-yes{ background:#dcfce7; color:#166534; }
+.offer-no { background:#fee2e2; color:#991b1b; }
+
+.exp-role{ color:#c7d2fe; font-size:13px; margin-top:5px; position:relative; z-index:1; }
+.exp-meta-chips{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; position:relative; z-index:1; }
+.exp-chip{
+  background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px; padding:3px 10px; font-size:11px;
+  color:rgba(255,255,255,0.85); font-weight:600;
+}
+
+/* card body */
+.exp-body{ padding:20px 22px; }
+
+.exp-section{ margin-bottom:16px; }
+.exp-section:last-child{ margin-bottom:0; }
+.exp-section-label{
+  font-size:11px; font-weight:700; color:#2563eb;
+  text-transform:uppercase; letter-spacing:.5px;
+  display:flex; align-items:center; gap:5px; margin-bottom:7px;
+}
+.exp-section-text{
+  font-size:13px; color:#475569; line-height:1.65;
+}
+
+/* expand/collapse */
+.exp-toggle{
+  width:100%; padding:10px; background:#f8fafc;
+  border:none; border-top:1px solid #f1f5f9;
+  font-size:13px; font-weight:600; color:#64748b;
+  cursor:pointer; font-family:'Sora',sans-serif;
+  transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:6px;
+}
+.exp-toggle:hover{ background:#eff6ff; color:#2563eb; }
+.exp-extra{ display:none; padding:0 22px 18px; border-top:1px solid #f1f5f9; }
+.exp-extra.open{ display:block; }
+
+/* contributor footer */
+.exp-footer{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 22px; background:#f8fafc; border-top:1px solid #f1f5f9;
+}
+.exp-author{ display:flex; align-items:center; gap:8px; }
+.exp-avatar{
+  width:30px; height:30px; border-radius:50%;
+  background:linear-gradient(135deg,#2563eb,#4f46e5);
+  color:#fff; font-size:13px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.exp-author-name{ font-size:13px; font-weight:700; color:#334155; }
+.exp-date{ font-size:11px; color:#94a3b8; font-weight:600; }
+
+/* ── EMPTY STATE ── */
+.empty{
+  text-align:center; padding:80px 20px; color:#94a3b8;
+  background:#fff; border-radius:18px; border:1.5px dashed #e2e8f0;
+}
+.empty .emoji{ font-size:52px; margin-bottom:16px; }
+.empty h3{ font-size:18px; font-weight:700; color:#64748b; margin-bottom:8px; }
+.empty p{ font-size:14px; }
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo">🎓 Campus<span>Hire</span></div>
+  <div class="nav-links">
+    <a href="/main">Home</a>
+    <a href="/prepare">Companies</a>
+    <a href="/experiences" class="active">🎓 Alumni Experiences</a>
+    <a href="/analytics">Analytics</a>
+    <a href="/dashboard" class="dashboard-link">📊 My Dashboard</a>
+  </div>
+  <a href="/prepare" class="nav-btn">Start Preparing →</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Real <span>Interview Experiences</span></h1>
+    <p>Read first-hand accounts from alumni who cracked their dream companies — rounds, tips, and everything in between.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="h-num"><%= experiences.length %></div>
+        <div class="h-lbl">Experiences</div>
+      </div>
+      <div class="hero-stat">
+        <div class="h-num"><%= experiences.filter(e => e.offerReceived).length %></div>
+        <div class="h-lbl">Offers Received</div>
+      </div>
+      <div class="hero-stat">
+        <div class="h-num"><%= [...new Set(experiences.map(e => e.company.toLowerCase()))].length %></div>
+        <div class="h-lbl">Companies</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search by company, role, or keyword..." onkeyup="filterExperiences()">
+  </div>
+  <button class="filter-pill active" onclick="setFilter('all', this)">🌐 All</button>
+  <button class="filter-pill" onclick="setFilter('offer', this)">✅ Got Offer</button>
+  <button class="filter-pill" onclick="setFilter('nooffer', this)">📚 No Offer</button>
+</div>
+
+<!-- RESULTS INFO -->
+<div class="results-info" id="resultsInfo"></div>
+
+<!-- EXPERIENCES GRID -->
+<div class="grid-container">
+
+  <% if (experiences.length === 0) { %>
+  <div class="empty">
+    <div class="emoji">📭</div>
+    <h3>No experiences shared yet</h3>
+    <p>Alumni can share their interview experiences from their dashboard.</p>
+  </div>
+  <% } else { %>
+
+  <div class="exp-grid" id="expGrid">
+    <% experiences.forEach((exp, i) => { %>
+    <div class="exp-card"
+         data-company="<%= exp.company.toLowerCase() %>"
+         data-role="<%= (exp.jobRole || '').toLowerCase() %>"
+         data-offer="<%= exp.offerReceived ? 'offer' : 'nooffer' %>"
+         data-text="<%= (exp.company + ' ' + exp.jobRole + ' ' + exp.overallExperience).toLowerCase() %>">
+
+      <!-- TOP BANNER -->
+      <div class="exp-card-top">
+        <div class="exp-company-row">
+          <div class="exp-company"><%= exp.company %></div>
+          <span class="offer-badge <%= exp.offerReceived ? 'offer-yes' : 'offer-no' %>">
+            <%= exp.offerReceived ? '✅ Offer' : '❌ No Offer' %>
+          </span>
+        </div>
+        <div class="exp-role">💼 <%= exp.jobRole %></div>
+        <div class="exp-meta-chips">
+          <% if (exp.batch) { %><span class="exp-chip">🎓 Batch <%= exp.batch %></span><% } %>
+          <% if (exp.ctc && exp.ctc !== 'Not disclosed') { %><span class="exp-chip">💰 <%= exp.ctc %></span><% } %>
+        </div>
+      </div>
+
+      <!-- BODY -->
+      <div class="exp-body">
+
+        <!-- Overall Experience -->
+        <div class="exp-section">
+          <div class="exp-section-label">🗣️ Overall Experience</div>
+          <div class="exp-section-text"><%= exp.overallExperience %></div>
+        </div>
+
+        <!-- Interview Rounds -->
+        <div class="exp-section">
+          <div class="exp-section-label">🔄 Interview Rounds</div>
+          <div class="exp-section-text"><%= exp.rounds %></div>
+        </div>
+
+      </div>
+
+      <!-- EXPAND BUTTON (shows tips) -->
+      <% if (exp.tips && exp.tips.trim() !== '') { %>
+      <button class="exp-toggle" onclick="toggleExtra(<%= i %>)" id="toggle-<%= i %>">
+        💡 View Tips <span id="arrow-<%= i %>">▼</span>
+      </button>
+      <div class="exp-extra" id="extra-<%= i %>">
+        <div class="exp-section" style="margin-top:14px">
+          <div class="exp-section-label">💡 Tips for Students</div>
+          <div class="exp-section-text"><%= exp.tips %></div>
+        </div>
+      </div>
+      <% } %>
+
+      <!-- FOOTER -->
+      <div class="exp-footer">
+        <div class="exp-author">
+          <div class="exp-avatar">
+            <%= exp.alumniName ? exp.alumniName.charAt(0).toUpperCase() : 'A' %>
+          </div>
+          <span class="exp-author-name">
+            <%= exp.alumniName ? exp.alumniName.split(' ')[0] : 'Alumni' %>
+          </span>
+        </div>
+        <span class="exp-date">
+          <%= exp.createdAt ? new Date(exp.createdAt).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '' %>
+        </span>
+      </div>
+
+    </div>
+    <% }) %>
+  </div>
+
+  <% } %>
+</div>
+
+<script>
+  let currentFilter = 'all';
+
+  // init count
+  window.onload = function(){
+    updateCount(document.querySelectorAll('.exp-card').length);
+  };
+
+  function setFilter(val, btn){
+    currentFilter = val;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterExperiences();
+  }
+
+  function filterExperiences(){
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const cards  = document.querySelectorAll('.exp-card');
+    let visible  = 0;
+
+    cards.forEach(card => {
+      const offerMatch = currentFilter === 'all' || card.dataset.offer === currentFilter;
+      const textMatch  = card.dataset.text.includes(search);
+      const show = offerMatch && textMatch;
+      card.style.display = show ? 'block' : 'none';
+      if(show) visible++;
+    });
+
+    updateCount(visible);
+  }
+
+  function updateCount(n){
+    document.getElementById('resultsInfo').textContent =
+      n + ' experience' + (n !== 1 ? 's' : '') + ' found';
+  }
+
+  function toggleExtra(i){
+    const extra  = document.getElementById('extra-'  + i);
+    const arrow  = document.getElementById('arrow-'  + i);
+    const toggle = document.getElementById('toggle-' + i);
+    const isOpen = extra.classList.contains('open');
+    extra.classList.toggle('open', !isOpen);
+    arrow.textContent  = isOpen ? '▼' : '▲';
+    toggle.style.color = isOpen ? '' : '#2563eb';
+  }
+</script>
+
+</body>
+</html>
