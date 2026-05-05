@@ -1,17 +1,18 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 const mongoose = require("mongoose");
 const Groq = require('groq-sdk');
-const groq = new Groq({ apiKey: "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" });
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const passport = require('passport');
 const GithubStrategy = require('passport-github2').Strategy;
 
 passport.use(new GithubStrategy({
-  clientID: "paste_your_github_client_id",
-  clientSecret: "paste_your_github_client_secret",
-  callbackURL: "/auth/github/callback",
+  clientID: process.env.GITHUB_CLIENT_ID,
+  clientSecret: process.env.GITHUB_CLIENT_SECRET,
+  callbackURL: process.env.GITHUB_CALLBACK_URL || "/auth/github/callback",
   scope: ['user:email']
 }, async (accessToken, refreshToken, profile, done) => {
   try {
@@ -43,7 +44,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-mongoose.connect("mongodb://127.0.0.1:27017/campusHire")
+mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log("✅ MongoDB Connected"))
 .catch(err => console.log(err));
 
@@ -56,11 +57,11 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo").default;
 
 app.use(session({
-  secret: "campushire-secret",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({                  
-    mongoUrl: "mongodb://127.0.0.1:27017/campusHire"
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI
   }),
   cookie: {
     secure: false,
@@ -71,16 +72,13 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-// random number generator
+
 function generateRandomData() {
-
   const solved = Math.floor(Math.random() * 80);
-
   return {
     dsaSolved: solved,
     mockScore: Math.floor(Math.random() * 100),
     overallProgress: Math.floor(solved / 2),
-
     topics: [
       { name: "DSA", solved, total: 200, color: "#2563eb" },
       { name: "Aptitude", solved: Math.floor(Math.random()*40), total: 100, color: "#10b981" }
@@ -88,29 +86,23 @@ function generateRandomData() {
   };
 }
 
-// login get route
 app.get("/", (req, res) => {
-  res.render("index", { error: null, formEmail: "" }); // ✅ pass error and formEmail
+  res.render("index", { error: null, formEmail: "" });
 });
 
-// login post route
 app.post("/", async (req, res) => {
   try {
-    const { email, password, role } = req.body; // ✅ also grab role
-
+    const { email, password, role } = req.body;
     const user = await User.findOne({ email, password });
-
     console.log("USER FOUND:", user);
 
     if (!user) {
-      // ✅ render back the page with error instead of blank page
       return res.render("index", {
         error: "❌ Invalid email or password. Please try again.",
         formEmail: email,
       });
     }
 
-    // ✅ check if selected role matches actual account role
     if (user.role !== role) {
       return res.render("index", {
         error: `❌ This account is registered as a ${user.role}. Please select the correct role.`,
@@ -124,7 +116,6 @@ app.post("/", async (req, res) => {
 
     req.session.save((err) => {
       if (err) console.log(err);
-      // ✅ role-based redirect
       if (user.role === "alumni") {
         res.redirect("/alumni/dashboard");
       } else {
@@ -141,11 +132,10 @@ app.post("/", async (req, res) => {
   }
 });
 
-// register route
 app.get("/register", (req, res) => {
     res.render("register");
 });
-//register route for post
+
 app.post("/register", async (req, res) => {
   try {
     const { name, email, password, confirmPassword, role, branch, batch, company, jobRole } = req.body;
@@ -184,11 +174,9 @@ app.post("/register", async (req, res) => {
 
     await newUser.save();
 
-    // ✅ ADD THESE 3 LINES
     req.session.userId   = newUser._id;
     req.session.userRole = newUser.role;
 
-    // ✅ REPLACE res.redirect("/") WITH THIS
     return res.redirect(newUser.role === "alumni" ? "/alumni/dashboard" : "/");
 
   } catch (err) {
@@ -196,11 +184,11 @@ app.post("/register", async (req, res) => {
     res.send("Something went wrong during registration");
   }
 });
-// frontend route
+
 app.get("/main", (req,res) =>{
     res.render("frontend");
 })
-// github oauth routes
+
 app.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
 
 app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/' }),
@@ -211,7 +199,7 @@ app.get('/auth/github/callback', passport.authenticate('github', { failureRedire
     res.redirect('/main');
   }
 );
-// Chatbot API route
+
 app.post("/api/chat", async (req, res) => {
   const { system, messages } = req.body;
   try {
@@ -233,102 +221,24 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-// prepare page
-app.get('/prepare', async (req, res) => {
-  const companies = [
-    {name:"Google",       category:"tech",     package:40, questions:200, logo:"/google.png",    views:3200,   hireRate:19, type:"Product"},
-    {name:"Amazon",       category:"tech",     package:32, questions:150, logo:"/amazon.png",    views:9000,   hireRate:20, type:"Product"},
-    {name:"Microsoft",    category:"tech",     package:38, questions:180, logo:"/microsoft.png", views:10000,  hireRate:9,  type:"Product"},
-    {name:"Infosys",      category:"it",       package:10, questions:120, logo:"/infosys.png",   views:500200, hireRate:78, type:"Service-Based"},
-    {name:"TCS",          category:"it",       package:9,  questions:110, logo:"/tcs.png",       views:20000,  hireRate:89, type:"Service-Based"},
-    {name:"Goldman Sachs",category:"finance",  package:30, questions:140, logo:"/goldman.jpg",   views:2900,   hireRate:34, type:"Bank"},
-    {name:"Deloitte",     category:"consulting",package:25,questions:130, logo:"/deloitte.jpeg", views:80000,  hireRate:67, type:"Service-Based"},
-    {name:"JPMorgan",     category:"Finance",  package:18, questions:180, logo:"/jpmorgan.png",  views:28000,  hireRate:42, type:"Bank"},
-  ];
-
-  const questions = await Question.find()
-    .populate("addedBy", "name company jobRole")
-    .sort({ createdAt: -1 });
-
-  res.render('prepare', {
-    companies,
-    questions,
-    userRole: req.session.userRole || "student",
-  });
-});
-
-// question bank
-app.get("/question-bank", async (req, res) => {
-  try {
-    const questions = await Question.find({
-      company: "general"
-    }).sort({ frequency: -1 }); // ⭐ important
-
-    res.render("questionBank", { questions });
-
-  } catch (err) {
-    console.log(err);
-    res.send("Error loading questions");
-  }
-});
-
-// analytics page
-app.get("/analytics", (req, res) => {
-    res.render("analytics");
-});
-
-// add question page 
-app.get("/add-question/:company", (req, res) => {
-  const company = req.params.company;
-  res.render("addQuestion", { company });
-});
-
-app.post("/add-question", async (req, res) => {
-  try {
-    const { company, questionText, category, difficulty, approach } = req.body;
-
-    await Question.create({
-      company: company.toLowerCase(),
-      questionText,
-      category,
-      difficulty,
-      approach,
-      frequency: Math.floor(Math.random() * 20) + 80 // optional
-    });
-
-    res.redirect("/company/" + company);
-
-  } catch (err) {
-    console.log(err);
-    res.send("Error saving question");
-  }
-});
-// student dashboard
 app.get("/dashboard", async (req, res) => {
   try {
     if (!req.session.userId) return res.redirect("/");
 
     const user = await User.findById(req.session.userId);
-    if (!user) { req.session.destroy(); return res.redirect("/"); }
-
-    // ← ADD THESE 3 LINES
-    console.log("SOLVED QUESTIONS:", user.solvedQuestions);
-    console.log("SOLVED COUNT:", user.solvedQuestions ? user.solvedQuestions.length : 0);
-    console.log("FULL USER:", JSON.stringify(user, null, 2));
-
-    const solvedCount = user.solvedQuestions ? user.solvedQuestions.length : 0;
+    if (!user) return res.redirect("/");
 
     const student = {
-      name:            user.name,
-      branch:          user.branch,
-      batch:           user.batch,
-      role:            user.role,
-      streak:          user.streak,
-      dsaSolved:       solvedCount,
-      mockScore:       user.mockScore,
-      overallProgress: Math.min(Math.floor((solvedCount / 50) * 100), 100),
+      name: user.name,
+      email: user.email,
+      branch: user.branch || "CSE",
+      batch: user.batch || 2026,
+      dsaSolved: user.dsaSolved || 0,
+      mockScore: user.mockScore || 0,
+      overallProgress: user.overallProgress || 0,
+      streak: user.streak || 0,
       topics: [
-        { name: "DSA",      solved: solvedCount, total: 50,  color: "#2563eb" },
+        { name: "DSA",      solved: user.topics && user.topics[0] ? user.topics[0].solved : 0, total: 200, color: "#2563eb" },
         { name: "Aptitude", solved: user.topics && user.topics[1] ? user.topics[1].solved : 0, total: 100, color: "#10b981" },
         { name: "Core CS",  solved: user.topics && user.topics[2] ? user.topics[2].solved : 0, total: 120, color: "#f59e0b" },
         { name: "HR",       solved: user.topics && user.topics[3] ? user.topics[3].solved : 0, total: 60,  color: "#ef4444" }
@@ -355,7 +265,7 @@ app.get("/dashboard", async (req, res) => {
     res.redirect("/");
   }
 });
-// Toggle question solved
+
 app.post("/toggle-solved", async (req, res) => {
   console.log("TOGGLE SESSION ID:", req.session.userId);
   try {
@@ -364,7 +274,6 @@ app.post("/toggle-solved", async (req, res) => {
     const { questionId } = req.body;
     const user = await User.findById(req.session.userId);
 
-    // ← ADD THIS: initialize if missing
     if (!user.solvedQuestions) {
       user.solvedQuestions = [];
     }
@@ -380,7 +289,6 @@ app.post("/toggle-solved", async (req, res) => {
     }
 
     await user.save();
-
     res.json({ success: true, solved: !alreadySolved, total: user.solvedQuestions.length });
 
   } catch (err) {
@@ -389,60 +297,56 @@ app.post("/toggle-solved", async (req, res) => {
   }
 });
 
-// Alumini experience 
-const Experience = require("./models/Experience.js"); // new model (see Experience.js)
- 
-// ── AUTH GUARD ────────────────────────────────────────────────
+const Experience = require("./models/Experience.js");
+
 function requireAlumni(req, res, next) {
   if (!req.session.userId || req.session.userRole !== "alumni") {
     return res.redirect("/");
   }
   next();
 }
- 
-// ── ALUMNI DASHBOARD ─────────────────────────────────────────
+
 app.get("/alumni/dashboard", requireAlumni, async (req, res) => {
   try {
     const alumni = await User.findById(req.session.userId);
     if (!alumni) { req.session.destroy(); return res.redirect("/"); }
- 
+
     const myQuestions   = await Question.find({ addedBy: req.session.userId }).sort({ createdAt: -1 });
     const myExperiences = await Experience.find({ alumniId: req.session.userId }).sort({ createdAt: -1 });
- 
+
     res.render("alumniDashboard", {
       alumni: {
-        name:       alumni.name,
-        email:      alumni.email,
-        company:    alumni.company   || "N/A",
-        jobRole:    alumni.jobRole   || "N/A",
-        batch:      alumni.batch     || "N/A",
-        branch:     alumni.branch    || "N/A",
+        name:    alumni.name,
+        email:   alumni.email,
+        company: alumni.company  || "N/A",
+        jobRole: alumni.jobRole  || "N/A",
+        batch:   alumni.batch    || "N/A",
+        branch:  alumni.branch   || "N/A",
       },
       myQuestions,
       myExperiences,
       stats: {
-        questionsAdded:     myQuestions.length,
-        experiencesShared:  myExperiences.length,
+        questionsAdded:    myQuestions.length,
+        experiencesShared: myExperiences.length,
       }
     });
- 
+
   } catch (err) {
     console.log("ALUMNI DASHBOARD ERROR:", err);
     res.send("Something went wrong");
   }
 });
- 
-// ── ADD QUESTION (GET) ───────────────────────────────────────
+
 app.get("/alumni/add-question", requireAlumni, (req, res) => {
   res.render("alumniAddQuestion", { error: null });
 });
 
 app.post("/alumni/add-question", requireAlumni, async (req, res) => {
   try {
-    const { company, questionText, category, difficulty, approach, round, leetcode } = req.body; // ✅ add leetcode
+    const { company, questionText, category, difficulty, approach, round, leetcode } = req.body;
 
     if (!company || !questionText || !category || !difficulty) {
-      return res.status(400).json({ success: false, message: "Please fill all required fields." }); // ✅ json instead of render
+      return res.status(400).json({ success: false, message: "Please fill all required fields." });
     }
 
     const question = await Question.create({
@@ -452,39 +356,33 @@ app.post("/alumni/add-question", requireAlumni, async (req, res) => {
       difficulty,
       approach:     approach || "",
       round:        round    || "Technical",
-      leetcode:     leetcode || "",               // ✅ add this
+      leetcode:     leetcode || "",
       frequency:    Math.floor(Math.random() * 20) + 80,
       addedBy:      req.session.userId,
     });
 
-    res.json({ success: true, id: question._id }); // ✅ json instead of redirect
+    res.json({ success: true, id: question._id });
 
   } catch (err) {
     console.log("ADD QUESTION ERROR:", err);
-    res.status(500).json({ success: false, message: "Something went wrong. Please try again." }); // ✅ json instead of render
+    res.status(500).json({ success: false, message: "Something went wrong. Please try again." });
   }
 });
 
-// ── SHARE EXPERIENCE (GET) ───────────────────────────────────
 app.get("/alumni/share-experience", requireAlumni, (req, res) => {
   res.render("alumniShareExperience", { error: null });
 });
- 
-// ── SHARE EXPERIENCE (POST) ──────────────────────────────────
+
 app.post("/alumni/share-experience", requireAlumni, async (req, res) => {
   try {
-    const {
-      company, jobRole, batch,
-      offerReceived, ctc,
-      rounds, tips, overallExperience
-    } = req.body;
- 
+    const { company, jobRole, batch, offerReceived, ctc, rounds, tips, overallExperience } = req.body;
+
     if (!company || !jobRole || !rounds || !overallExperience) {
       return res.render("alumniShareExperience", {
         error: "Please fill all required fields."
       });
     }
- 
+
     await Experience.create({
       alumniId:          req.session.userId,
       alumniName:        req.session.userName,
@@ -497,9 +395,9 @@ app.post("/alumni/share-experience", requireAlumni, async (req, res) => {
       tips:              tips || "",
       overallExperience: overallExperience.trim(),
     });
- 
+
     res.redirect("/alumni/dashboard");
- 
+
   } catch (err) {
     console.log("SHARE EXPERIENCE ERROR:", err);
     res.render("alumniShareExperience", {
@@ -507,19 +405,17 @@ app.post("/alumni/share-experience", requireAlumni, async (req, res) => {
     });
   }
 });
- 
-// ── PUBLIC: View all experiences ─────────────────────────────
+
 app.get("/experiences", async (req, res) => {
   try {
-    const experiences = await Experience.find({}).sort({ createdAt: -1 }); // ✅ experiences not experience
-    res.render("experiences", { experiences }); // ✅ experiences not experience
+    const experiences = await Experience.find({}).sort({ createdAt: -1 });
+    res.render("experiences", { experiences });
   } catch (err) {
     console.log(err);
     res.send("Error loading experiences");
   }
 });
 
-// company page with questions
 app.get("/company/:name", async (req, res) => {
   try {
     const companyName = decodeURIComponent(req.params.name);
@@ -528,10 +424,10 @@ app.get("/company/:name", async (req, res) => {
       { name:"Google",        category:"tech",       package:40, questions:200, logo:"/google.png",    views:3200,   hireRate:19,  type:"Product"       },
       { name:"Amazon",        category:"tech",       package:32, questions:150, logo:"/amazon.png",    views:9000,   hireRate:20,  type:"Product"       },
       { name:"Microsoft",     category:"tech",       package:38, questions:180, logo:"/microsoft.png", views:10000,  hireRate:9,   type:"Product"       },
-      { name:"Infosys",       category:"it",         package:10, questions:120, logo:"/infosys.png",   views:500200, hireRate:78,  type:"Service-Based"  },
-      { name:"TCS",           category:"it",         package:9,  questions:110, logo:"/tcs.png",       views:20000,  hireRate:89,  type:"Service-Based"  },
+      { name:"Infosys",       category:"it",         package:10, questions:120, logo:"/infosys.png",   views:500200, hireRate:78,  type:"Service-Based" },
+      { name:"TCS",           category:"it",         package:9,  questions:110, logo:"/tcs.png",       views:20000,  hireRate:89,  type:"Service-Based" },
       { name:"Goldman Sachs", category:"finance",    package:30, questions:140, logo:"/goldman.jpg",   views:2900,   hireRate:34,  type:"Bank"          },
-      { name:"Deloitte",      category:"consulting", package:25, questions:130, logo:"/deloitte.jpeg", views:80000,  hireRate:67,  type:"Service-Based"  },
+      { name:"Deloitte",      category:"consulting", package:25, questions:130, logo:"/deloitte.jpeg", views:80000,  hireRate:67,  type:"Service-Based" },
       { name:"JPMorgan",      category:"Finance",    package:18, questions:180, logo:"/jpmorgan.png",  views:28000,  hireRate:42,  type:"Bank"          },
     ];
 
@@ -541,7 +437,7 @@ app.get("/company/:name", async (req, res) => {
 
     const escaped = companyName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-    const dbQuestions = await Question.find({        // ✅ renamed to dbQuestions
+    const dbQuestions = await Question.find({
       company: { $regex: new RegExp(`^${escaped}$`, 'i') }
     })
     .populate("addedBy", "name company jobRole")
@@ -549,7 +445,7 @@ app.get("/company/:name", async (req, res) => {
 
     res.render("companyPage", {
       company,
-      questions: dbQuestions,                        
+      questions: dbQuestions,
       userRole: req.session.userRole || "student",
     });
 
@@ -558,7 +454,7 @@ app.get("/company/:name", async (req, res) => {
     res.send("Something went wrong loading this company page.");
   }
 });
+
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
-
