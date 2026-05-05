@@ -1,502 +1,900 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Campus Hire</title>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CampusHire — Ace Your Placements</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-<style>
-*{ margin:0; padding:0; box-sizing:border-box; font-family:'Sora', sans-serif; }
+    :root {
+      --navy: #0a0f2c;
+      --navy2: #111936;
+      --blue: #2563eb;
+      --blue2: #1d4ed8;
+      --accent: #38bdf8;
+      --accent2: #0ea5e9;
+      
+      --white: #ffffff;
+      --offwhite: #f8faff;
+      --border: #e2e8f0;
+      --muted: #64748b;
+      --text: #0f172a;
+      --card: #ffffff;
+      --radius: 16px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.07);
+    }
 
-body{ background:#f1f5f9; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--offwhite); color: var(--text); overflow-x: hidden; }
 
-/* ── NAVBAR ── */
-.navbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0 40px;
-  height:64px;
-  background:#fff;
-  border-bottom:1px solid #e2e8f0;
-  position:sticky;
-  top:0;
-  z-index:100;
-  box-shadow:0 1px 8px rgba(0,0,0,0.06);
-}
+    /* ─── NAVBAR ─── */
+    .navbar {
+      position: sticky; top: 0; z-index: 200;
+      height: 64px;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px;
+    }
+    .logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800; font-size: 20px;
+      color: var(--navy); letter-spacing: -0.5px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); }
+    .logo span { color: var(--blue); }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-links a {
+      text-decoration: none; color: var(--muted);
+      font-size: 14px; font-weight: 500;
+      padding: 7px 14px; border-radius: 9px; transition: all 0.2s;
+    }
+    .nav-links a:hover { background: var(--offwhite); color: var(--text); }
+    .nav-links a.active { color: var(--blue); background: #eff6ff; }
+    .nav-cta {
+      background: var(--navy); color: white;
+      padding: 9px 20px; border-radius: 10px;
+      text-decoration: none; font-size: 14px; font-weight: 600;
+      font-family: 'Sora', sans-serif;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--blue); }
 
-.logo{ font-size:20px; font-weight:700; color:#0f172a; letter-spacing:-0.5px; }
-.logo span{ color:#2563eb; }
+    /* ─── HERO ─── */
+    .hero {
+      background: var(--navy);
+      color: white;
+      padding: 96px 40px 110px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(circle, rgba(56,189,248,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .glow1 { width: 700px; height: 700px; top: -300px; left: -150px; }
+    .glow2 { width: 500px; height: 500px; bottom: -200px; right: -100px; background: radial-gradient(circle, rgba(37,99,235,0.2) 0%, transparent 70%); }
 
-.nav-links{ display:flex; align-items:center; gap:6px; }
-.nav-links a{
-  text-decoration:none;
-  color:#64748b;
-  font-size:14px;
-  font-weight:600;
-  padding:7px 14px;
-  border-radius:8px;
-  transition:all 0.2s;
-}
-.nav-links a:hover{ background:#f1f5f9; color:#0f172a; }
+    .hero-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 50px;
+      border: 1px solid rgba(56,189,248,0.35);
+      background: rgba(56,189,248,0.08);
+      font-size: 13px; color: var(--accent);
+      font-weight: 500; margin-bottom: 28px;
+      position: relative; z-index: 1;
+    }
+    .hero-pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
 
-/* Dashboard link styled differently */
-.nav-links a.dashboard-link{
-  color:#2563eb;
-  background:#eff6ff;
-}
-.nav-links a.dashboard-link:hover{ background:#dbeafe; }
+    .hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 800; line-height: 1.12;
+      margin-bottom: 22px; letter-spacing: -1px;
+      position: relative; z-index: 1;
+    }
+    .hero h1 .hl { color: var(--accent); }
+    .hero p {
+      max-width: 560px; margin: 0 auto 38px;
+      color: #94a3b8; font-size: 16px; line-height: 1.7;
+      position: relative; z-index: 1;
+    }
+    .hero-btns {
+      display: flex; justify-content: center; gap: 12px;
+      flex-wrap: wrap; position: relative; z-index: 1;
+    }
+    .btn-primary {
+      background: var(--blue); color: white;
+      padding: 13px 28px; border-radius: 11px;
+      text-decoration: none; font-weight: 600; font-size: 15px;
+      font-family: 'Sora', sans-serif;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--blue2); transform: translateY(-1px); }
+    .btn-ghost {
+      border: 1.5px solid rgba(255,255,255,0.25); color: white;
+      padding: 13px 28px; border-radius: 11px;
+      text-decoration: none; font-weight: 600; font-size: 15px;
+      font-family: 'Sora', sans-serif;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.06); }
 
-.nav-right{ display:flex; align-items:center; gap:10px; }
+    .hero-trust {
+      margin-top: 48px; position: relative; z-index: 1;
+      display: flex; align-items: center; justify-content: center; gap: 28px;
+      font-size: 13px; color: #64748b;
+    }
+    .trust-item { display: flex; align-items: center; gap: 6px; }
+    .trust-sep { width: 1px; height: 16px; background: rgba(255,255,255,0.1); }
 
-.cta{
-  background:linear-gradient(135deg,#2563eb,#4f46e5);
-  color:#fff;
-  padding:9px 20px;
-  border-radius:9px;
-  text-decoration:none;
-  font-size:14px;
-  font-weight:600;
-  transition:opacity 0.2s;
-}
-.cta:hover{ opacity:0.9; }
+    /* ─── STATS STRIP ─── */
+    .stats-strip {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: center;
+    }
+    .stats-inner {
+      display: flex; max-width: 900px; width: 100%;
+    }
+    .stat-item {
+      flex: 1; padding: 32px 20px; text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Sora', sans-serif;
+      font-size: 2rem; font-weight: 800;
+      color: var(--navy); letter-spacing: -1px;
+    }
+    .stat-num span { color: var(--blue); }
+    .stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; font-weight: 500; }
 
-/* ── HERO ── */
-.hero{
-  background:linear-gradient(135deg,#0f172a,#1e2a5a,#3b3fbf);
-  color:white;
-  text-align:center;
-  padding:90px 20px 100px;
-  position:relative;
-  overflow:hidden;
-}
+    /* ─── SECTION WRAPPER ─── */
+    .section { padding: 72px 40px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-tag {
+      display: inline-block; font-size: 12px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--blue); background: #eff6ff;
+      padding: 5px 14px; border-radius: 50px; margin-bottom: 14px;
+    }
+    .section-header h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700; color: var(--navy); letter-spacing: -0.5px;
+    }
+    .section-header p { color: var(--muted); font-size: 15px; margin-top: 10px; }
 
-.hero::before{
-  content:'';
-  position:absolute;
-  width:600px; height:600px;
-  background:rgba(99,102,241,0.15);
-  border-radius:50%;
-  top:-200px; left:-100px;
-}
-.hero::after{
-  content:'';
-  position:absolute;
-  width:400px; height:400px;
-  background:rgba(37,99,235,0.1);
-  border-radius:50%;
-  bottom:-150px; right:-50px;
-}
+    /* ─── CATEGORIES ─── */
+    .cat-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    }
+    .cat-card {
+      padding: 28px 20px; border-radius: var(--radius);
+      text-align: center; cursor: pointer;
+      border: 1.5px solid transparent;
+      transition: all 0.22s; text-decoration: none; display: block;
+    }
+    .cat-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+    .cat-icon { font-size: 2rem; margin-bottom: 12px; display: block; }
+    .cat-name { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 15px; color: var(--navy); }
+    .cat-desc { font-size: 13px; color: var(--muted); margin-top: 5px; }
 
-.hero-badge{
-  display:inline-block;
-  padding:7px 18px;
-  border-radius:50px;
-  border:1px solid rgba(147,197,253,0.4);
-  background:rgba(255,255,255,0.08);
-  margin-bottom:22px;
-  font-size:13px;
-  color:#93c5fd;
-  position:relative;
-  z-index:1;
-}
+    /* ─── FEATURES ─── */
+    .features-section { background: white; }
+    .feat-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; }
+    .feat-card {
+      background: var(--offwhite); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px;
+      display: flex; gap: 18px; align-items: flex-start;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .feat-card:hover { border-color: #bfdbfe; box-shadow: var(--shadow); }
+    .feat-icon-box {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: #eff6ff; display: flex; align-items: center;
+      justify-content: center; font-size: 22px; flex-shrink: 0;
+    }
+    .feat-card h4 { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .feat-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
 
-.hero h1{
-  font-size:52px;
-  line-height:1.15;
-  margin:0 0 20px;
-  position:relative;
-  z-index:1;
-}
-.hero h1 span{ color:#60a5fa; }
+    /* ─── COMPANIES ─── */
+    .companies-section { background: var(--offwhite); }
+    .co-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; }
+    .co-header h2 { font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--navy); }
+    .co-header a { font-size: 14px; font-weight: 600; color: var(--blue); text-decoration: none; }
+    .co-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+    .co-card {
+      background: white; border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 22px;
+      cursor: pointer; transition: all 0.22s; text-decoration: none; display: block;
+    }
+    .co-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.08); border-color: #bfdbfe; }
+    .co-logo {
+      width: 44px; height: 44px; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Sora', sans-serif;
+      color: white; font-weight: 800; font-size: 14px; margin-bottom: 14px;
+    }
+    .co-card h3 { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+    .co-card .co-q { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+    .pill {
+      display: inline-block; padding: 3px 11px;
+      border-radius: 50px; font-size: 12px; font-weight: 600;
+    }
+    .pill.hard { background: #fee2e2; color: #b91c1c; }
+    .pill.medium { background: #fef3c7; color: #b45309; }
+    .pill.easy { background: #dcfce7; color: #15803d; }
 
-.hero p{
-  max-width:620px;
-  margin:0 auto 32px;
-  color:#c7d2fe;
-  font-size:16px;
-  line-height:1.7;
-  position:relative;
-  z-index:1;
-}
+    /* ─── WHY SECTION ─── */
+    .why-section {
+      background: var(--navy); color: white;
+      padding: 80px 40px;
+    }
+    .why-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 60px; align-items: center; }
+    .why-left { flex: 1; }
+    .why-left .section-tag { background: rgba(56,189,248,0.12); color: var(--accent); }
+    .why-left h2 { font-family: 'Sora', sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; line-height: 1.3; margin-bottom: 18px; }
+    .why-left h2 span { color: var(--accent); }
+    .why-left p { color: #94a3b8; font-size: 15px; line-height: 1.7; margin-bottom: 28px; }
+    .why-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .why-list li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #cbd5e1; }
+    .check-icon {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: var(--accent); flex-shrink: 0;
+    }
+    .why-right { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .why-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px; padding: 24px;
+      transition: background 0.2s;
+    }
+    .why-card:hover { background: rgba(255,255,255,0.08); }
+    .why-card .wc-num {
+      font-family: 'Sora', sans-serif; font-size: 1.8rem; font-weight: 800;
+      color: var(--accent); margin-bottom: 4px;
+    }
+    .why-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .why-card p { font-size: 12px; color: #94a3b8; }
 
-.hero-btns{ display:flex; justify-content:center; gap:14px; position:relative; z-index:1; }
+    /* ─── FOOTER ─── */
+    .footer { background: #060c20; color: #64748b; padding: 56px 40px 28px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; }
+    .footer-top { display: flex; justify-content: space-between; gap: 40px; margin-bottom: 40px; flex-wrap: wrap; }
+    .footer-brand .logo { margin-bottom: 12px; display: flex; }
+    .footer-brand p { font-size: 14px; line-height: 1.6; max-width: 220px; }
+    .footer-col h4 { color: white; font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+    .footer-col a { display: block; color: #64748b; text-decoration: none; font-size: 14px; margin-bottom: 8px; transition: color 0.2s; }
+    .footer-col a:hover { color: white; }
+    .footer-bottom { border-top: 1px solid #1e293b; padding-top: 22px; text-align: center; font-size: 13px; color: #334155; }
 
-.primary{
-  background:#3b82f6;
-  color:white;
-  padding:13px 26px;
-  border-radius:10px;
-  text-decoration:none;
-  font-weight:600;
-  font-size:15px;
-  transition:background 0.2s;
-}
-.primary:hover{ background:#2563eb; }
+    /* ─── CHATBOT BUBBLE ─── */
+    .chat-bubble {
+      position: fixed; bottom: 28px; right: 28px; z-index: 999;
+      width: 60px; height: 60px; border-radius: 50%;
+      background: var(--blue);
+      border: none; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(37,99,235,0.45);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .chat-bubble:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(37,99,235,0.55); }
+    .chat-bubble svg { width: 26px; height: 26px; fill: white; transition: opacity 0.2s; }
+    .bubble-badge {
+      position: absolute; top: -4px; right: -4px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #ef4444; border: 2px solid white;
+      font-size: 10px; font-weight: 700; color: white;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .chat-tooltip {
+      position: absolute; bottom: 72px; right: 0;
+      background: var(--navy); color: white;
+      font-size: 13px; font-weight: 500;
+      padding: 8px 14px; border-radius: 10px;
+      white-space: nowrap; pointer-events: none;
+      opacity: 0; transform: translateY(6px);
+      transition: all 0.2s;
+    }
+    .chat-bubble:hover .chat-tooltip { opacity: 1; transform: translateY(0); }
 
-.secondary{
-  border:1.5px solid rgba(255,255,255,0.4);
-  color:white;
-  padding:13px 26px;
-  border-radius:10px;
-  text-decoration:none;
-  font-weight:600;
-  font-size:15px;
-  transition:background 0.2s;
-}
-.secondary:hover{ background:rgba(255,255,255,0.1); }
+    /* ─── CHAT PANEL ─── */
+    .chat-panel {
+      position: fixed; bottom: 100px; right: 28px; z-index: 998;
+      width: 380px; max-height: 560px;
+      background: white; border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      transform: scale(0.92) translateY(20px);
+      opacity: 0; pointer-events: none;
+      transform-origin: bottom right;
+      transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .chat-panel.open {
+      transform: scale(1) translateY(0);
+      opacity: 1; pointer-events: all;
+    }
 
-/* ── STATS ── */
-.stats{
-  display:flex;
-  justify-content:center;
-  gap:20px;
-  padding:40px;
-  background:linear-gradient(#1e3a8a,#2d3e8b);
-}
-.stat-box{
-  background:rgba(255,255,255,0.1);
-  border:1px solid rgba(255,255,255,0.15);
-  padding:28px 40px;
-  border-radius:16px;
-  text-align:center;
-  color:white;
-  flex:1;
-  max-width:220px;
-}
-.stat-box h2{ font-size:32px; font-weight:700; }
-.stat-box p{ color:#bfdbfe; font-size:14px; margin-top:4px; }
+    .panel-header {
+      background: var(--navy); padding: 16px 18px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .panel-avatar {
+      width: 38px; height: 38px; border-radius: 11px;
+      background: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .panel-avatar svg { width: 20px; height: 20px; fill: white; }
+    .panel-info { flex: 1; }
+    .panel-info p { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 14px; color: white; }
+    .panel-info span { font-size: 12px; color: #94a3b8; display: flex; align-items: center; gap: 5px; }
+    .online { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; }
+    .panel-close {
+      background: none; border: none; cursor: pointer;
+      color: #94a3b8; font-size: 20px; line-height: 1;
+      transition: color 0.2s; padding: 4px;
+    }
+    .panel-close:hover { color: white; }
 
-/* ── SECTION ── */
-.section{ padding:70px 60px; text-align:center; }
-.section h2{ font-size:30px; color:#0f172a; margin-bottom:10px; }
-.section .sub{ color:#64748b; font-size:15px; margin-bottom:36px; }
+    .panel-messages {
+      flex: 1; overflow-y: auto; padding: 16px;
+      display: flex; flex-direction: column; gap: 12px;
+      background: #f8faff; min-height: 260px; max-height: 320px;
+    }
 
-/* ── CATEGORIES ── */
-.categories{
-  display:flex;
-  justify-content:center;
-  gap:18px;
-  flex-wrap:wrap;
-}
-.cat-card{
-  padding:28px 32px;
-  border-radius:16px;
-  width:180px;
-  cursor:pointer;
-  font-weight:600;
-  font-size:15px;
-  color:#0f172a;
-  border:1.5px solid transparent;
-  transition:all 0.2s;
-}
-.cat-card:hover{ transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.1); }
-.cat-card .icon{ font-size:28px; margin-bottom:10px; }
+    .pmsg { display: flex; gap: 8px; align-items: flex-end; }
+    .pmsg.user { flex-direction: row-reverse; }
 
-/* ── FEATURES ── */
-.features{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:18px;
-  margin-top:10px;
-  text-align:left;
-}
-.feature-box{
-  background:#fff;
-  padding:26px;
-  border-radius:14px;
-  border:1px solid #e2e8f0;
-  display:flex;
-  align-items:flex-start;
-  gap:14px;
-}
-.feature-box .ficon{
-  font-size:26px;
-  background:#eff6ff;
-  padding:10px;
-  border-radius:10px;
-}
-.feature-box h4{ font-size:15px; color:#0f172a; margin-bottom:4px; }
-.feature-box p{ font-size:13px; color:#64748b; line-height:1.5; }
+    .pmsg-av {
+      width: 28px; height: 28px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0;
+    }
+    .pmsg-av.bot { background: #eff6ff; color: var(--blue); }
+    .pmsg-av.usr { background: #f1f5f9; color: var(--muted); }
 
-/* ── COMPANIES ── */
-.company-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:20px;
-  margin-top:10px;
-  text-align:left;
-}
-.company-card{
-  background:#fff;
-  padding:24px;
-  border-radius:16px;
-  cursor:pointer;
-  border:1px solid #e2e8f0;
-  transition:all 0.25s;
-}
-.company-card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 12px 28px rgba(0,0,0,0.09);
-  border-color:#bfdbfe;
-}
-.logo-circle{
-  width:48px; height:48px;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-  font-weight:700;
-  font-size:16px;
-  margin-bottom:14px;
-}
-.company-card h3{ font-size:15px; color:#0f172a; margin-bottom:4px; }
-.company-card p{ color:#94a3b8; font-size:13px; margin-bottom:10px; }
+    .pmsg-text {
+      max-width: 78%; padding: 10px 13px;
+      border-radius: 13px; font-size: 13px; line-height: 1.55;
+    }
+    .pmsg.bot .pmsg-text {
+      background: white; border: 1px solid var(--border);
+      color: var(--text); border-bottom-left-radius: 4px;
+    }
+    .pmsg.user .pmsg-text {
+      background: var(--blue); color: white;
+      border-bottom-right-radius: 4px;
+    }
 
-.badge-pill{
-  padding:4px 12px;
-  border-radius:50px;
-  font-size:12px;
-  font-weight:600;
-}
-.badge-pill.hard{ background:#fee2e2; color:#dc2626; }
-.badge-pill.medium{ background:#fef3c7; color:#d97706; }
-.badge-pill.easy{ background:#dcfce7; color:#16a34a; }
+    .typing-dots {
+      display: flex; gap: 4px;
+      padding: 12px 14px; background: white;
+      border: 1px solid var(--border); border-radius: 13px;
+      border-bottom-left-radius: 4px; width: fit-content;
+    }
+    .typing-dots span {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--blue); opacity: 0.4;
+      animation: tdot 1.2s infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes tdot { 0%,80%,100%{transform:translateY(0);opacity:.4} 40%{transform:translateY(-5px);opacity:1} }
 
-/* ── WHY ── */
-.why-section{
-  margin:0 50px 60px;
-  padding:60px;
-  border-radius:24px;
-  background:linear-gradient(135deg,#1e40af,#4f46e5);
-  color:white;
-  display:flex;
-  justify-content:space-between;
-  gap:40px;
-  align-items:center;
-}
-.why-left{ width:45%; }
-.why-left h2{ font-size:30px; line-height:1.3; }
-.why-left h2 span{ color:#93c5fd; }
-.why-left p{ margin:18px 0; line-height:1.7; color:#c7d2fe; font-size:15px; }
-.why-left ul{ list-style:none; display:flex; flex-direction:column; gap:10px; }
-.why-left li{ font-size:14px; color:#e0e7ff; }
+    .upload-prompt {
+      background: #eff6ff; border: 1.5px dashed #bfdbfe;
+      border-radius: 11px; padding: 14px 16px; margin: 4px 0;
+      text-align: center; cursor: pointer; transition: all 0.2s;
+    }
+    .upload-prompt:hover { border-color: var(--blue); background: #dbeafe; }
+    .upload-prompt p { font-size: 13px; color: var(--blue); font-weight: 600; }
+    .upload-prompt small { font-size: 11px; color: var(--muted); }
 
-.why-right{
-  width:50%;
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:16px;
-}
-.why-card{
-  background:rgba(255,255,255,0.1);
-  border:1px solid rgba(255,255,255,0.15);
-  padding:22px;
-  border-radius:14px;
-}
-.why-card h3{ font-size:16px; margin-bottom:6px; }
-.why-card p{ font-size:13px; color:#c7d2fe; }
+    .file-ok {
+      background: #dcfce7; border: 1px solid #86efac;
+      border-radius: 10px; padding: 10px 14px;
+      font-size: 13px; color: #15803d; font-weight: 500;
+      display: flex; align-items: center; gap: 8px;
+    }
 
-/* ── FOOTER ── */
-.footer{ background:#0f172a; color:#94a3b8; padding:50px 60px 30px; }
-.footer-container{ display:flex; justify-content:space-between; gap:40px; margin-bottom:36px; }
-.footer h3{ color:#fff; font-size:15px; margin-bottom:14px; }
-.footer p{ font-size:14px; line-height:1.6; }
-.footer a{ display:block; color:#94a3b8; text-decoration:none; margin:6px 0; font-size:14px; transition:color 0.2s; }
-.footer a:hover{ color:#fff; }
-.footer-bottom{ border-top:1px solid #1e293b; padding-top:20px; text-align:center; font-size:13px; color:#475569; }
-</style>
+    .panel-quick {
+      padding: 10px 14px 0;
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .pquick {
+      font-size: 12px; padding: 5px 11px;
+      border: 1px solid var(--border); border-radius: 20px;
+      background: white; color: var(--text);
+      cursor: pointer; transition: all 0.18s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .pquick:hover { border-color: var(--blue); color: var(--blue); background: #eff6ff; }
+
+    .panel-input-row {
+      padding: 12px 14px; border-top: 1px solid var(--border);
+      display: flex; gap: 8px; background: white;
+    }
+    .panel-input {
+      flex: 1; padding: 9px 13px;
+      border: 1px solid var(--border); border-radius: 10px;
+      font-size: 13px; font-family: 'DM Sans', sans-serif;
+      outline: none; transition: border-color 0.2s; color: var(--text);
+      background: var(--offwhite);
+    }
+    .panel-input:focus { border-color: var(--blue); }
+    .panel-input::placeholder { color: #94a3b8; }
+    .panel-send {
+      background: var(--blue); border: none; border-radius: 10px;
+      width: 38px; height: 38px; display: flex;
+      align-items: center; justify-content: center;
+      cursor: pointer; transition: background 0.2s, transform 0.1s; flex-shrink: 0;
+    }
+    .panel-send:hover { background: var(--blue2); }
+    .panel-send:active { transform: scale(0.95); }
+    .panel-send svg { width: 16px; height: 16px; fill: white; }
+    .panel-send:disabled { background: #94a3b8; cursor: not-allowed; }
+
+    #resumeInput { display: none; }
+
+    @media (max-width: 768px) {
+      .navbar { padding: 0 16px; }
+      .nav-links { display: none; }
+      .hero { padding: 64px 20px 72px; }
+      .section { padding: 56px 20px; }
+      .cat-grid { grid-template-columns: repeat(2,1fr); }
+      .feat-grid { grid-template-columns: 1fr; }
+      .co-grid { grid-template-columns: repeat(2,1fr); }
+      .why-inner { flex-direction: column; gap: 36px; }
+      .why-right { grid-template-columns: 1fr 1fr; }
+      .stats-inner { flex-wrap: wrap; }
+      .stat-item { min-width: 50%; border-right: none; border-bottom: 1px solid var(--border); }
+      .chat-panel { width: calc(100vw - 32px); right: 16px; bottom: 90px; }
+    }
+  </style>
 </head>
-
 <body>
 
 <!-- NAVBAR -->
-<div class="navbar">
-  <div class="logo">🎓 Campus<span>Hire</span></div>
-
+<nav class="navbar">
+  <div class="logo">
+    <div class="logo-dot"></div>
+    Campus<span>Hire</span>
+  </div>
   <div class="nav-links">
-    <a href="/">Home</a>
+    <a href="/" class="active">Home</a>
     <a href="/prepare">Companies</a>
-    <a href="/question-bank">Question Bank</a>
+    <a href="/experiences">Alumni Experiences</a>
     <a href="/analytics">Analytics</a>
-    <a href="/dashboard" class="dashboard-link">📊 My Dashboard</a>
+    <a href="/dashboard">My Dashboard</a>
   </div>
-
-  <div class="nav-right">
-    <a href="/prepare" class="cta">Start Preparing →</a>
-  </div>
-</div>
+  <a href="/prepare" class="nav-cta">Start Preparing →</a>
+</nav>
 
 <!-- HERO -->
-<div class="hero">
-  <div class="hero-badge">⭐ Trusted by 12,500+ students across India</div>
-  <h1>Ace Your Campus Placements<br>with <span>Real Interview Data</span></h1>
-  <p>Access company-specific question banks and prepare smarter using real experiences from placed seniors.</p>
-  <div class="hero-btns">
-    <a href="/prepare" class="primary">Explore Companies →</a>
-    <a href="/question-bank" class="secondary">Browse Questions</a>
+<section class="hero">
+  <div class="hero-glow glow1"></div>
+  <div class="hero-glow glow2"></div>
+  <div class="hero-pill">
+    <span class="hero-pill-dot"></span>
+    Trusted by 12,500+ students across India
   </div>
-</div>
+  <h1>Ace Your Campus Placements<br>with <span class="hl">Real Interview Data</span></h1>
+  <p>Access company-specific question banks built from real experiences of placed seniors. Prepare smarter, not harder.</p>
+  <div class="hero-btns">
+    <a href="/prepare" class="btn-primary">Explore Companies →</a>
+    <a href="/question-bank" class="btn-ghost">Browse Questions</a>
+  </div>
+  <div class="hero-trust">
+    <div class="trust-item">✦ 50+ Companies</div>
+    <div class="trust-sep"></div>
+    <div class="trust-item">✦ 2,800+ Questions</div>
+    <div class="trust-sep"></div>
+    <div class="trust-item">✦ 73% Placement Rate</div>
+  </div>
+</section>
 
 <!-- STATS -->
-<div class="stats">
-  <div class="stat-box"><h2>50+</h2><p>Companies</p></div>
-  <div class="stat-box"><h2>2.8K+</h2><p>Questions</p></div>
-  <div class="stat-box"><h2>13K+</h2><p>Students</p></div>
-  <div class="stat-box"><h2>73%</h2><p>Placement Rate</p></div>
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-num">50<span>+</span></div>
+      <div class="stat-label">Companies covered</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">2.8<span>K+</span></div>
+      <div class="stat-label">Verified questions</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">13<span>K+</span></div>
+      <div class="stat-label">Students preparing</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">73<span>%</span></div>
+      <div class="stat-label">Placement rate</div>
+    </div>
+  </div>
 </div>
 
 <!-- CATEGORIES -->
-<div class="section">
-  <h2>Preparation Categories</h2>
-  <p class="sub">Pick your focus area and start practicing today</p>
-
-  <div class="categories">
-    <div class="cat-card" style="background:#fef3c7; border-color:#fde68a;" onclick="location.href='/questions?cat=aptitude'">
-      <div class="icon">🧮</div> Aptitude
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">Preparation Areas</div>
+      <h2>Pick Your Focus, Start Practicing</h2>
+      <p>Structured categories mapped to real campus interview rounds</p>
     </div>
-    <div class="cat-card" style="background:#dbeafe; border-color:#bfdbfe;" onclick="location.href='/questions?cat=dsa'">
-      <div class="icon">💻</div> Coding DSA
-    </div>
-    <div class="cat-card" style="background:#ede9fe; border-color:#ddd6fe;" onclick="location.href='/questions?cat=tech'">
-      <div class="icon">⚙️</div> Technical
-    </div>
-    <div class="cat-card" style="background:#dcfce7; border-color:#bbf7d0;" onclick="location.href='/questions?cat=hr'">
-      <div class="icon">🤝</div> HR Questions
+    <div class="cat-grid">
+      <a href="/questions?cat=aptitude" class="cat-card" style="background:#fffbeb; border-color:#fde68a;">
+        <span class="cat-icon">🧮</span>
+        <div class="cat-name">Aptitude</div>
+        <div class="cat-desc">Quant, reasoning & logic</div>
+      </a>
+      <a href="/questions?cat=dsa" class="cat-card" style="background:#eff6ff; border-color:#bfdbfe;">
+        <span class="cat-icon">💻</span>
+        <div class="cat-name">Coding & DSA</div>
+        <div class="cat-desc">Arrays, trees, graphs & more</div>
+      </a>
+      <a href="/questions?cat=tech" class="cat-card" style="background:#f5f3ff; border-color:#ddd6fe;">
+        <span class="cat-icon">⚙️</span>
+        <div class="cat-name">Technical</div>
+        <div class="cat-desc">OS, DBMS, CN, OOP</div>
+      </a>
+      <a href="/questions?cat=hr" class="cat-card" style="background:#f0fdf4; border-color:#bbf7d0;">
+        <span class="cat-icon">🤝</span>
+        <div class="cat-name">HR Round</div>
+        <div class="cat-desc">Behavioural & soft skills</div>
+      </a>
     </div>
   </div>
-</div>
+</section>
 
 <!-- FEATURES -->
-<div class="section" style="background:#fff; padding:70px 100px;">
-  <h2>Everything You Need to Get Placed</h2>
-  <p class="sub">All your placement tools in one place</p>
-
-  <div class="features">
-    <div class="feature-box">
-      <div class="ficon">🏢</div>
-      <div>
-        <h4>Company Question Banks</h4>
-        <p>Real questions asked in campus drives, filtered by company and role.</p>
-      </div>
+<section class="section features-section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">Platform Features</div>
+      <h2>Everything You Need to Get Placed</h2>
+      <p>All your placement preparation tools — in one place</p>
     </div>
-    <div class="feature-box">
-      <div class="ficon">📊</div>
-      <div>
-        <h4>Placement Analytics</h4>
-        <p>Visualize hiring trends, difficulty levels, and package data.</p>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-icon-box">🏢</div>
+        <div>
+          <h4>Company Question Banks</h4>
+          <p>Real questions from actual campus drives, filtered by company, round, and difficulty level.</p>
+        </div>
       </div>
-    </div>
-    <div class="feature-box">
-      <div class="ficon">🤖</div>
-      <div>
-        <h4>AI-Ready Preparation</h4>
-        <p>Smart tips and topic recommendations based on your progress.</p>
+      <div class="feat-card">
+        <div class="feat-icon-box">📊</div>
+        <div>
+          <h4>Placement Analytics</h4>
+          <p>Visualize hiring trends, skill demand index, and question distribution across companies.</p>
+        </div>
       </div>
-    </div>
-    <div class="feature-box">
-      <div class="ficon">👨‍🎓</div>
-      <div>
-        <h4>Senior Insights</h4>
-        <p>Learn from students who cracked interviews at top companies.</p>
+      <div class="feat-card">
+        <div class="feat-icon-box">🤖</div>
+        <div>
+          <h4>AI Resume Analyser</h4>
+          <p>Upload your resume and get instant AI feedback tailored for campus placements at top companies.</p>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-box">👨‍🎓</div>
+        <div>
+          <h4>Senior Insights</h4>
+          <p>Learn directly from students who cracked interviews at TCS, Amazon, Infosys, and more.</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- COMPANIES -->
-<div class="section">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-    <div style="text-align:left;">
-      <h2 style="margin-bottom:4px;">Top Companies</h2>
-      <p style="color:#64748b; font-size:14px;">Click a company to explore its questions</p>
+<section class="section companies-section">
+  <div class="section-inner">
+    <div class="co-header">
+      <div>
+        <div class="section-tag" style="margin-bottom:8px;">Top Recruiters</div>
+        <h2>Company Question Banks</h2>
+        <p style="color:var(--muted); font-size:14px; margin-top:4px;">Click a company to explore its interview questions</p>
+      </div>
+      <a href="/companies">View all companies →</a>
     </div>
-    <a href="/companies" style="color:#2563eb; text-decoration:none; font-weight:600; font-size:14px;">View all →</a>
+    <div class="co-grid">
+      <%
+        const companies = [
+          {name:"Google",        q:148, level:"Hard",   color:"#4285F4", letter:"G"},
+          {name:"Microsoft",     q:132, level:"Hard",   color:"#00A4EF", letter:"M"},
+          {name:"Amazon",        q:165, level:"Hard",   color:"#FF9900", letter:"A"},
+          {name:"Infosys",       q:210, level:"Medium", color:"#007CC3", letter:"I"},
+          {name:"TCS",           q:245, level:"Medium", color:"#E60000", letter:"T"},
+          {name:"Wipro",         q:198, level:"Easy",   color:"#5A2D82", letter:"W"},
+          {name:"Goldman Sachs", q:89,  level:"Hard",   color:"#6FA8DC", letter:"GS"},
+          {name:"Deloitte",      q:156, level:"Medium", color:"#86BC25", letter:"D"}
+        ];
+      %>
+      <% companies.forEach(function(c) { %>
+      <a href="/questions/<%= c.name %>" class="co-card">
+        <div class="co-logo" style="background-color: <%= c.color %>;"><%= c.letter %></div>
+        <h3><%= c.name %></h3>
+        <p class="co-q"><%= c.q %> questions</p>
+        <span class="pill <%= c.level.toLowerCase() %>"><%= c.level %></span>
+      </a>
+      <% }); %>
+    </div>
   </div>
+</section>
 
-  <div class="company-grid">
-    <% const companies = [
-      {name:"Google",       q:148, level:"Hard",   color:"#4285F4", letter:"G"},
-      {name:"Microsoft",    q:132, level:"Hard",   color:"#00A4EF", letter:"M"},
-      {name:"Amazon",       q:165, level:"Hard",   color:"#FF9900", letter:"A"},
-      {name:"Infosys",      q:210, level:"Medium", color:"#007CC3", letter:"I"},
-      {name:"TCS",          q:245, level:"Medium", color:"#E60000", letter:"T"},
-      {name:"Wipro",        q:198, level:"Easy",   color:"#5A2D82", letter:"W"},
-      {name:"Goldman Sachs",q:89,  level:"Hard",   color:"#6FA8DC", letter:"GS"},
-      {name:"Deloitte",     q:156, level:"Medium", color:"#86BC25", letter:"D"}
-    ]; %>
-
-    <% companies.forEach(function(c) { %>
-  <div class="company-card" onclick="location.href='/questions/<%= c.name %>'">
-    <h3><%= c.name %></h3>
-    <p><%= c.q %> questions</p>
-    <span class="badge-pill <%= c.level.toLowerCase() %>"><%= c.level %></span>
-  </div>
-<% }); %>
-  </div>
-</div>
-
-<!-- WHY -->
-<div class="why-section">
-  <div class="why-left">
-    <h2>Why <span>CampusHire?</span></h2>
-    <p>We convert unstructured placement experiences into a structured knowledge repository, reducing information asymmetry and helping every student prepare with equal access to insider knowledge.</p>
-    <ul>
-      <li>✔ Company-specific, verified question banks</li>
-      <li>✔ Real trends from actual hiring seasons</li>
-      <li>✔ Analytics to identify high-demand skills</li>
-      <li>✔ Collaborative platform updated by seniors</li>
-    </ul>
-  </div>
-
-  <div class="why-right">
-    <div class="why-card">
-      <h3>📈 Placement Trends</h3>
-      <p>Year-over-year hiring analytics</p>
+<!-- WHY CAMPUSHIRE -->
+<section class="why-section">
+  <div class="why-inner">
+    <div class="why-left">
+      <div class="section-tag">Why CampusHire?</div>
+      <h2>Built for students,<br>by <span>placed seniors</span></h2>
+      <p>We convert unstructured placement experiences into a structured knowledge repository — reducing information asymmetry so every student gets equal access to insider knowledge.</p>
+      <ul class="why-list">
+        <li><div class="check-icon">✓</div> Company-specific, verified question banks</li>
+        <li><div class="check-icon">✓</div> Real trends from actual hiring seasons</li>
+        <li><div class="check-icon">✓</div> Analytics to identify high-demand skills</li>
+        <li><div class="check-icon">✓</div> AI resume analyser for instant feedback</li>
+      </ul>
     </div>
-    <div class="why-card">
-      <h3>🏢 50+ Companies</h3>
-      <p>FAANG to mass recruiters</p>
-    </div>
-    <div class="why-card">
-      <h3>📚 2840+ Questions</h3>
-      <p>Verified by placed seniors</p>
-    </div>
-    <div class="why-card">
-      <h3>👨‍🎓 12K+ Students</h3>
-      <p>Across institutions</p>
+    <div class="why-right">
+      <div class="why-card">
+        <div class="wc-num">73%</div>
+        <h3>Placement Rate</h3>
+        <p>Among active users who prepared with Campus Hire</p>
+      </div>
+      <div class="why-card">
+        <div class="wc-num">50+</div>
+        <h3>Companies</h3>
+        <p>From FAANG to top mass recruiters</p>
+      </div>
+      <div class="why-card">
+        <div class="wc-num">2.8K</div>
+        <h3>Questions</h3>
+        <p>Verified by placed seniors from real drives</p>
+      </div>
+      <div class="why-card">
+        <div class="wc-num">12K+</div>
+        <h3>Students</h3>
+        <p>Actively preparing across institutions</p>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- FOOTER -->
-<div class="footer">
-  <div class="footer-container">
-    <div>
-      <h3>🎓 CampusHire</h3>
-      <p>Your placement companion.<br>Built for students, by students.</p>
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo" style="color:white; margin-bottom:10px;">
+          <div class="logo-dot"></div>
+          Campus<span>Hire</span>
+        </div>
+        <p>Your placement companion.<br>Built for students, by students.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="/">Home</a>
+        <a href="/companies">Companies</a>
+        <a href="/questions">Questions</a>
+        <a href="/dashboard">Dashboard</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="/analytics">Analytics</a>
+        <a href="/experiences">Alumni Experiences</a>
+        <a href="#">Blog</a>
+        <a href="#">Help</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:support@campushire.in">support@campushire.in</a>
+        <a href="#">About Us</a>
+        <a href="#">Privacy Policy</a>
+      </div>
     </div>
-    <div>
-      <h3>Quick Links</h3>
-      <a href="/">Home</a>
-      <a href="/companies">Companies</a>
-      <a href="/questions">Questions</a>
-      <a href="/dashboard">My Dashboard</a>
+    <div class="footer-bottom">© 2025 CampusHire. Built with ❤️ for Indian students.</div>
+  </div>
+</footer>
+
+<!-- CHATBOT BUBBLE -->
+<button class="chat-bubble" id="chatBubble" onclick="toggleChat()" title="Resume Analyser">
+  <div class="chat-tooltip">Analyse my resume ✨</div>
+  <div class="bubble-badge">AI</div>
+  <svg id="bubbleIcon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+  <svg id="closeIcon" viewBox="0 0 24 24" style="display:none"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+</button>
+
+<!-- CHAT PANEL -->
+<div class="chat-panel" id="chatPanel">
+  <div class="panel-header">
+    <div class="panel-avatar">
+      <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 012 2v1h3a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h3V4a2 2 0 012-2z"/></svg>
     </div>
-    <div>
-      <h3>Resources</h3>
-      <a href="#">Blog</a>
-      <a href="#">Guides</a>
-      <a href="#">Help</a>
+    <div class="panel-info">
+      <p>Hire Bot</p>
+      <span><span class="online"></span> AI Resume Analyser · Powered by HireAbilityAPI</span>
     </div>
-    <div>
-      <h3>Contact</h3>
-      <p>campushire@support.com</p>
+    <button class="panel-close" onclick="toggleChat()">✕</button>
+  </div>
+
+  <div class="panel-messages" id="panelMessages">
+    <div class="pmsg bot">
+      <div class="pmsg-av bot">H</div>
+      <div class="pmsg-text">Hi! 👋 I'm <strong>Hire Bot</strong>. Upload your resume and I'll analyse it for campus placements — checking skills, projects, ATS score, and more!</div>
+    </div>
+    <div class="pmsg bot">
+      <div class="pmsg-av bot">H</div>
+      <div>
+        <div class="upload-prompt" onclick="document.getElementById('resumeInput').click()">
+          <p>📄 Upload your Resume (PDF)</p>
+          <small>Click here or drag & drop · Max 5MB</small>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="footer-bottom">© 2025 CampusHire. All rights reserved.</div>
+
+  <div class="panel-quick" id="panelQuick">
+    <button class="pquick" onclick="pq('Analyse for TCS')">For TCS</button>
+    <button class="pquick" onclick="pq('Check ATS score')">ATS check</button>
+    <button class="pquick" onclick="pq('Missing skills?')">Missing skills</button>
+    <button class="pquick" onclick="pq('Improve projects section')">Projects</button>
+  </div>
+
+  <div class="panel-input-row">
+    <input class="panel-input" id="panelInput" placeholder="Ask about your resume…" />
+    <button class="panel-send" id="panelSend" onclick="panelSend()">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
 </div>
 
+<input type="file" id="resumeInput" accept=".pdf"/>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  let chatOpen = false;
+  let resumeText = '';
+  let chatHistory = [];
+
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    document.getElementById('chatPanel').classList.toggle('open', chatOpen);
+    document.getElementById('bubbleIcon').style.display = chatOpen ? 'none' : 'block';
+    document.getElementById('closeIcon').style.display = chatOpen ? 'block' : 'none';
+  }
+
+  document.getElementById('resumeInput').addEventListener('change', function() {
+    if (this.files[0]) handleResume(this.files[0]);
+  });
+
+  async function handleResume(file) {
+    if (file.size > 5 * 1024 * 1024) { addPanelBot('File too large. Please upload a PDF under 5MB.'); return; }
+
+    addPanelUser('📄 ' + file.name);
+    addPanelTyping();
+
+    try {
+      const ab = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
+      let text = '';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        text += content.items.map(i => i.str).join(' ') + '\n';
+      }
+      resumeText = text.trim();
+      removePanelTyping();
+
+      if (!resumeText || resumeText.length < 50) {
+        addPanelBot('Could not read text from this PDF. Please upload a text-based (not scanned) PDF.'); return;
+      }
+
+      const fileOk = document.createElement('div');
+      fileOk.className = 'pmsg bot';
+      fileOk.innerHTML = `<div class="pmsg-av bot">H</div><div><div class="file-ok">✓ ${file.name} — analysing now…</div></div>`;
+      document.getElementById('panelMessages').appendChild(fileOk);
+      scrollPanel();
+
+      chatHistory = [];
+      await getChatReply('Do a full campus placement analysis of this resume. Cover: ATS score out of 10, key skills found, top 3 missing skills for Indian campus companies, projects quality, and 3 improvement tips. Be concise and clear.');
+    } catch(e) {
+      removePanelTyping();
+      addPanelBot('Error reading PDF. Make sure it is a valid text-based PDF.');
+    }
+  }
+
+  async function panelSend() {
+    const val = document.getElementById('panelInput').value.trim();
+    if (!val) return;
+    document.getElementById('panelInput').value = '';
+    if (!resumeText) { addPanelUser(val); addPanelBot('Please upload your resume first so I can help you!'); return; }
+    addPanelUser(val);
+    addPanelTyping();
+    await getChatReply(val);
+  }
+
+  async function pq(msg) {
+    if (!resumeText) { toggleChat(); addPanelBot('Please upload your resume first!'); return; }
+    addPanelUser(msg);
+    addPanelTyping();
+    await getChatReply(msg);
+  }
+
+  async function getChatReply(userMsg) {
+    const system = `You are Hire Bot, an expert campus placement advisor for Indian engineering students. You know what TCS, Infosys, Wipro, Accenture, Amazon, and other campus recruiters look for. The student's resume: ---\n${resumeText}\n--- Give specific, actionable, concise feedback. For scoring use /10. Tailor for Indian campus placements.`;
+    chatHistory.push({ role: 'user', content: userMsg });
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ system, messages: chatHistory })
+      });
+      const data = await res.json();
+      const reply = data.content[0].text;
+      chatHistory.push({ role: 'assistant', content: reply });
+      removePanelTyping();
+      addPanelBot(reply);
+    } catch(e) {
+      removePanelTyping();
+      addPanelBot('Something went wrong. Please make sure the server is running.');
+    }
+  }
+
+  function addPanelUser(text) {
+    const d = document.createElement('div');
+    d.className = 'pmsg user';
+    d.innerHTML = `<div class="pmsg-av usr">U</div><div class="pmsg-text">${esc(text)}</div>`;
+    document.getElementById('panelMessages').appendChild(d);
+    scrollPanel();
+  }
+
+  function addPanelBot(html) {
+    const d = document.createElement('div');
+    d.className = 'pmsg bot';
+    d.innerHTML = `<div class="pmsg-av bot">H</div><div class="pmsg-text">${fmt(html)}</div>`;
+    document.getElementById('panelMessages').appendChild(d);
+    scrollPanel();
+  }
+
+  function addPanelTyping() {
+    const d = document.createElement('div');
+    d.className = 'pmsg bot'; d.id = 'ptyping';
+    d.innerHTML = `<div class="pmsg-av bot">H</div><div class="typing-dots"><span></span><span></span><span></span></div>`;
+    document.getElementById('panelMessages').appendChild(d);
+    scrollPanel();
+  }
+
+  function removePanelTyping() { const t = document.getElementById('ptyping'); if(t) t.remove(); }
+  function scrollPanel() { const m = document.getElementById('panelMessages'); m.scrollTop = m.scrollHeight; }
+  function esc(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function fmt(t) {
+    return t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+            .replace(/\*(.+?)\*/g,'<em>$1</em>')
+            .replace(/^- (.+)$/gm,'• $1')
+            .replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+  }
+
+  document.getElementById('panelInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); panelSend(); }
+  });
+</script>
 </body>
 </html>
