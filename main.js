@@ -1,14 +1,49 @@
 const express = require("express");
 const path = require("path");
 const app = express();
-const port = process.env.PORT || 10000;
+const port = 8080;
 const mongoose = require("mongoose");
+const Groq = require('groq-sdk');
+const groq = new Groq({ apiKey: "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" });
+const passport = require('passport');
+const GithubStrategy = require('passport-github2').Strategy;
+
+passport.use(new GithubStrategy({
+  clientID: "paste_your_github_client_id",
+  clientSecret: "paste_your_github_client_secret",
+  callbackURL: "/auth/github/callback",
+  scope: ['user:email']
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    const email = profile.emails?.[0]?.value || `${profile.username}@github.com`;
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({
+        name: profile.displayName || profile.username,
+        email,
+        password: "oauth_user",
+        role: "student",
+        branch: "CSE",
+        batch: 2026,
+      });
+    }
+    return done(null, user);
+  } catch (err) { return done(err, null); }
+}));
+
+passport.serializeUser((user, done) => done(null, user._id));
+passport.deserializeUser(async (id, done) => {
+  const user = await User.findById(id);
+  done(null, user);
+});
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-mongoose.connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/campusHire")
+
+mongoose.connect("mongodb://127.0.0.1:27017/campusHire")
 .then(() => console.log("✅ MongoDB Connected"))
 .catch(err => console.log(err));
 
@@ -24,8 +59,8 @@ app.use(session({
   secret: "campushire-secret",
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({                   // ← ADD - saves session to MongoDB
-    mongoUrl: process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/campusHire"
+  store: MongoStore.create({                  
+    mongoUrl: "mongodb://127.0.0.1:27017/campusHire"
   }),
   cookie: {
     secure: false,
@@ -34,6 +69,8 @@ app.use(session({
   }
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
 // random number generator
 function generateRandomData() {
 
@@ -163,6 +200,38 @@ app.post("/register", async (req, res) => {
 app.get("/main", (req,res) =>{
     res.render("frontend");
 })
+// github oauth routes
+app.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
+
+app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/' }),
+  (req, res) => {
+    req.session.userId   = req.user._id;
+    req.session.userName = req.user.name;
+    req.session.userRole = req.user.role;
+    res.redirect('/main');
+  }
+);
+// Chatbot API route
+app.post("/api/chat", async (req, res) => {
+  const { system, messages } = req.body;
+  try {
+    const response = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        { role: "system", content: system },
+        ...messages
+      ],
+      max_tokens: 1024,
+    });
+
+    const reply = response.choices[0].message.content;
+    res.json({ content: [{ text: reply }] });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "API call failed" });
+  }
+});
 
 // prepare page
 app.get('/prepare', async (req, res) => {
@@ -442,13 +511,14 @@ app.post("/alumni/share-experience", requireAlumni, async (req, res) => {
 // ── PUBLIC: View all experiences ─────────────────────────────
 app.get("/experiences", async (req, res) => {
   try {
-    const experiences = await Experience.find({}).sort({ createdAt: -1 });
-    res.render("experiences", { experiences });
+    const experiences = await Experience.find({}).sort({ createdAt: -1 }); // ✅ experiences not experience
+    res.render("experiences", { experiences }); // ✅ experiences not experience
   } catch (err) {
     console.log(err);
     res.send("Error loading experiences");
   }
 });
+
 // company page with questions
 app.get("/company/:name", async (req, res) => {
   try {
@@ -488,6 +558,7 @@ app.get("/company/:name", async (req, res) => {
     res.send("Something went wrong loading this company page.");
   }
 });
-app.listen(port, '0.0.0.0', () => {
+app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
+
